@@ -13,9 +13,9 @@ class vehiculo
         $this->importe = $importe;
     }
 
-    static function leer()
+    static function leer($nombreArchivo)
     {
-        $archivo = fopen("./vehiculos.txt", "r");
+        $archivo = fopen($nombreArchivo, "r");
         $retorno = array();
 
         while (!feof($archivo)) {
@@ -31,8 +31,21 @@ class vehiculo
         return $retorno;
     }
 
+    function guardar($nombreArchivo)
+    {
+        $archivo = fopen($nombreArchivo, "a+");
+        $linea = implode(",", $this->toArray());
+        fputs($archivo, $linea.PHP_EOL);
+        fclose($archivo);
+    }
+
     function mostrar()
     {
         echo "Patente: $this->patente | Ingreso: $this->ingreso | Importe: $this->importe<br>";
+    }
+
+    function toArray()
+    {
+        return array($this->patente, $this->ingreso, $this->importe);
     }
 }

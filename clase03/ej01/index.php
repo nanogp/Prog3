@@ -10,7 +10,18 @@
 
 <body>
     <?php
+
+    echo $_SERVER['REQUEST_METHOD'];
+
+
+
     include "traerVehiculos.php";
+
+    include "crearVehiculo.php";
+
+    include "guardarVehiculos.php";
+
+
     ?>
 </body>
 
