@@ -20,19 +20,26 @@
         //$auto = new Vehiculo("asd123", "01/01/2019 14:30", "123.56");
         $estacionamiento->leerCSV();
 
-        echo $_SERVER['REQUEST_METHOD']."<br>";
-        switch ($_SERVER['REQUEST_METHOD'])
+        $metodo = $_SERVER['REQUEST_METHOD'];
+        echo "REQUEST_METHOD: $metodo<br>";
+
+        switch ($metodo)
         {
             case "GET":
-                echo $_GET["accion"]."<br>";
-                switch ($_GET["accion"])
+                if(isset($_GET["accion"]))
                 {
-                    case 'mostrarListado':
-                        $estacionamiento->mostrar();
-                        break;
-                    default:
-                        echo "en desarrollo<br>";
-                        break;
+                    $accion = $_GET["accion"];
+                    echo "accion: $accion<br>";
+
+                    switch ($accion)
+                    {
+                        case 'mostrarListado':
+                            $estacionamiento->mostrar();
+                            break;
+                        default:
+                            echo "en desarrollo<br>";
+                            break;
+                    }
                 }
                 break;
             case "POST":
