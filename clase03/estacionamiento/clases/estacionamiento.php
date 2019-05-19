@@ -11,18 +11,39 @@ class Estacionamiento
     const formatoFecha = "Y-m-d H:i";
     private $nombre;
     private $listado;
-    private $fhActual; //fecha-hora
+    private $fhInicio; //fecha-hora
 
     function __construct($nombre)
     {
         $this->nombre = $nombre;
         $this->listado = array();
-        $this->fhActual = date(Estacionamiento::formatoFecha);
+        $this->fhInicio = date(Estacionamiento::formatoFecha);
     }
 
     function getListado()
     {
         return $this->listado;
+    }
+
+    function getFhInicio()
+    {
+        return $this->fhInicio;
+    }
+
+    function getFHActual()
+    {
+        return date(Estacionamiento::formatoFecha);
+    }
+
+    function addVehiculo($patente)
+    {
+        $this->putListado(new vehiculo($patente, $this->getFHActual(), "0"));
+    }
+
+    function putListado($vehiculo)
+    {
+        array_push($this->listado, $vehiculo);
+        $this->guardarCSV($vehiculo);
     }
 
     function leerCSV()
@@ -37,8 +58,7 @@ class Estacionamiento
 
     function guardarListadoCSV()
     {
-        //Archivos::guardarListadoCSV( Estacionamiento::nombreArchivoCSV, $this->listado);
-        Archivos::guardarListadoCSV("archivos/prueba.csv", $this->getListado());
+        Archivos::guardarListadoCSV(Estacionamiento::nombreArchivoCSV, $this->listado);
     }
 
     function mostrar()

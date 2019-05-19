@@ -19,7 +19,7 @@ class Vehiculo
 
     static function vehiculoFromArray($array)
     {
-        return(new self($array[0], $array[1], $array[2]));
+        return new self($array[0], $array[1], rtrim($array[2], PHP_EOL));
     }
 
     function mostrar()
@@ -31,7 +31,4 @@ class Vehiculo
     {
         return array($this->patente, $this->fechaHoraIngreso, $this->importe);
     }
-
 }
-
-?>

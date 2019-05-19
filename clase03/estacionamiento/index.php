@@ -6,7 +6,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <!-- <link rel="stylesheet" href="./css/estilos.css"> -->
-
     <title>Document</title>
 </head>
 
@@ -17,26 +16,23 @@
 
     $estacionamiento = new Estacionamiento("Lopecito Appart Car");
 
-    $estacionamiento->leerCSV();
+    //$estacionamiento->leerCSV();
 
-    $estacionamiento->guardarListadoCSV();
-
-    //$auto = new Vehiculo("asd123", "01/01/2019 14:30", "123.56");
-
-
-
-    /*
     $metodo = $_SERVER['REQUEST_METHOD'];
-    echo "REQUEST_METHOD: $metodo<br>";
     switch ($metodo) {
         case "GET":
             if (isset($_GET["accion"])) {
-                $accion = $_GET["accion"];
-                echo "accion: $accion<br>";
-
-                switch ($accion) {
+                switch ($_GET["accion"]) {
                     case 'mostrarListado':
+                        $estacionamiento->leerCSV();
                         $estacionamiento->mostrar();
+                        break;
+                    case 'alta':
+                        if (isset($_GET["patente"])) {
+                            $estacionamiento->addVehiculo($_GET["patente"]);
+                        } else {
+                            echo "no hay patente informada<br>";
+                        }
                         break;
                     default:
                         echo "en desarrollo<br>";
@@ -46,10 +42,18 @@
             break;
         case "POST":
             if (isset($_POST["accion"])) {
-                $accion = $_POST["accion"];
-                echo "accion: $accion<br>";
 
-                switch ($accion) {
+                switch ($_POST["accion"]) {
+                    case 'alta':
+                        if (isset($_POST["patente"])) {
+                            $estacionamiento->addVehiculo($_POST["patente"]);
+                        } else {
+                            echo "no hay patente informada<br>";
+                        }
+                        break;
+                    case 'guardarCsv':
+                        $estacionamiento->guardarCSV();
+                        break;
                     case 'guardarListadoCsv':
                         $estacionamiento->guardarListadoCSV();
                         break;
@@ -65,7 +69,7 @@
         case "PUT":
             echo "en desarrollo<br>";
             break;
-    } //switch*/
+    } //switch
 
     ?>
 

@@ -11,21 +11,19 @@ class Archivos
         # code...
     }
 
-    static function leerCSV($nombreArchivo, $constructor)
+    static function leerCSV($nombreArchivo, $constructor, $separador = ",")
     {
         $archivo = fopen($nombreArchivo, "r");
         $retorno = array();
-
         while (!feof($archivo)) {
-
-            $linea = fgets($archivo);
-            $arrayDeDatos = explode(",", $linea);
-            $dato = call_user_func($constructor, $arrayDeDatos);
-            array_push($retorno, $dato);
+            $linea = trim(fgets($archivo));
+            if ($linea) {
+                $arrayDeDatos = explode($separador, $linea);
+                $dato = call_user_func($constructor, $arrayDeDatos);
+                array_push($retorno, $dato);
+            }
         }
-
         fclose($archivo);
-
         return $retorno;
     }
 
@@ -40,39 +38,12 @@ class Archivos
     public static function GuardarListadoCSV($nombreArchivo, $listado, $separador = ",")
     {
         $archivo = fopen($nombreArchivo, "w");
-
         foreach ($listado as $objeto) {
-            if ($objeto != "") {
-                for ($i = 0,  $array = $objeto->toArray(); $i < count($array); $i++) {
-                    if ($i == 0) {
-                        $dato = $array[$i];
-                    } else {
-                        $dato = $dato . $separador . $array[$i];
-                    }
-                }
+            if ($objeto) {
+                $linea = implode($separador, $objeto->toArray());
+                fputs($archivo, $linea . PHP_EOL);
             }
-            fputs($archivo, $dato);
         }
-        fputs($archivo, PHP_EOL);
         fclose($archivo);
     }
-    /*
-    public static function GuardarListadoCSV($nombreArchivo, $listado, $separador = ",")
-    {
-        $archivo = fopen($nombreArchivo, "w");
-
-        foreach ($listado as $objeto) {
-            $dato = "";
-            if ($objeto != "") {
-                foreach ($objeto->toArray() as $campo) {
-                    $dato = $dato . $campo . $separador;
-                }
-                $dato = rtrim($dato, $separador);
-            }
-            fputs($archivo, $dato);
-        }
-        fputs($archivo, PHP_EOL);
-        fclose($archivo);
-    }
-    */
 }
