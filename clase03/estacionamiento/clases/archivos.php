@@ -5,13 +5,13 @@
  */
 class Archivos
 {
-	
-	function __construct()
-	{
-		# code...
-	}
 
-	static function leerCSV($nombreArchivo, $constructor)
+    function __construct()
+    {
+        # code...
+    }
+
+    static function leerCSV($nombreArchivo, $constructor)
     {
         $archivo = fopen($nombreArchivo, "r");
         $retorno = array();
@@ -33,10 +33,46 @@ class Archivos
     {
         $archivo = fopen($nombreArchivo, "a+");
         $linea = implode($separador, $array);
-        fputs($archivo, $linea.PHP_EOL);
+        fputs($archivo, $linea . PHP_EOL);
         fclose($archivo);
     }
 
-}
+    public static function GuardarListadoCSV($nombreArchivo, $listado, $separador = ",")
+    {
+        $archivo = fopen($nombreArchivo, "w");
 
-?>
+        foreach ($listado as $objeto) {
+            if ($objeto != "") {
+                for ($i = 0,  $array = $objeto->toArray(); $i < count($array); $i++) {
+                    if ($i == 0) {
+                        $dato = $array[$i];
+                    } else {
+                        $dato = $dato . $separador . $array[$i];
+                    }
+                }
+            }
+            fputs($archivo, $dato);
+        }
+        fputs($archivo, PHP_EOL);
+        fclose($archivo);
+    }
+    /*
+    public static function GuardarListadoCSV($nombreArchivo, $listado, $separador = ",")
+    {
+        $archivo = fopen($nombreArchivo, "w");
+
+        foreach ($listado as $objeto) {
+            $dato = "";
+            if ($objeto != "") {
+                foreach ($objeto->toArray() as $campo) {
+                    $dato = $dato . $campo . $separador;
+                }
+                $dato = rtrim($dato, $separador);
+            }
+            fputs($archivo, $dato);
+        }
+        fputs($archivo, PHP_EOL);
+        fclose($archivo);
+    }
+    */
+}

@@ -12,46 +12,60 @@
 
 <body>
     <?php
-        require_once "clases/vehiculo.php";
-        require_once "clases/estacionamiento.php";
+    require_once "clases/vehiculo.php";
+    require_once "clases/estacionamiento.php";
 
-        $estacionamiento = new Estacionamiento("Lopecito Appart Car");
+    $estacionamiento = new Estacionamiento("Lopecito Appart Car");
 
-        //$auto = new Vehiculo("asd123", "01/01/2019 14:30", "123.56");
-        $estacionamiento->leerCSV();
+    $estacionamiento->leerCSV();
 
-        $metodo = $_SERVER['REQUEST_METHOD'];
-        echo "REQUEST_METHOD: $metodo<br>";
+    $estacionamiento->guardarListadoCSV();
 
-        switch ($metodo)
-        {
-            case "GET":
-                if(isset($_GET["accion"]))
-                {
-                    $accion = $_GET["accion"];
-                    echo "accion: $accion<br>";
+    //$auto = new Vehiculo("asd123", "01/01/2019 14:30", "123.56");
 
-                    switch ($accion)
-                    {
-                        case 'mostrarListado':
-                            $estacionamiento->mostrar();
-                            break;
-                        default:
-                            echo "en desarrollo<br>";
-                            break;
-                    }
+
+
+    /*
+    $metodo = $_SERVER['REQUEST_METHOD'];
+    echo "REQUEST_METHOD: $metodo<br>";
+    switch ($metodo) {
+        case "GET":
+            if (isset($_GET["accion"])) {
+                $accion = $_GET["accion"];
+                echo "accion: $accion<br>";
+
+                switch ($accion) {
+                    case 'mostrarListado':
+                        $estacionamiento->mostrar();
+                        break;
+                    default:
+                        echo "en desarrollo<br>";
+                        break;
                 }
-                break;
-            case "POST":
-                echo "en desarrollo<br>";
-                break;
-            case "DELETE":
-                echo "en desarrollo<br>";
-                break;
-            case "PUT":
-                echo "en desarrollo<br>";
-                break;
-        } 
+            }
+            break;
+        case "POST":
+            if (isset($_POST["accion"])) {
+                $accion = $_POST["accion"];
+                echo "accion: $accion<br>";
+
+                switch ($accion) {
+                    case 'guardarListadoCsv':
+                        $estacionamiento->guardarListadoCSV();
+                        break;
+                    default:
+                        echo "en desarrollo<br>";
+                        break;
+                }
+            }
+            break;
+        case "DELETE":
+            echo "en desarrollo<br>";
+            break;
+        case "PUT":
+            echo "en desarrollo<br>";
+            break;
+    } //switch*/
 
     ?>
 
