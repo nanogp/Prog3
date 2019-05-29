@@ -30,7 +30,7 @@ if (file_exists($destino)) {
 	//$uploadOk = FALSE;
 	Archivos::copiarABackup($destino);
 }
-//VERIFICO EL TAMA�O MAXIMO QUE PERMITO SUBIR
+//VERIFICO EL TAMAÑO MAXIMO QUE PERMITO SUBIR
 if ($_FILES["archivo"]["size"] > 500000) {
 	echo "El archivo es demasiado grande. Verifique!!!";
 	$uploadOk = FALSE;
@@ -38,7 +38,7 @@ if ($_FILES["archivo"]["size"] > 500000) {
 //VERIFICO SI ES UNA IMAGEN O NO
 //var_dump(getimagesize($_FILES["archivo"]["tmp_name"]));die();
 
-//OBTIENE EL TAMA�O DE UNA IMAGEN, SI EL ARCHIVO NO ES UNA
+//OBTIENE EL TAMAÑO DE UNA IMAGEN, SI EL ARCHIVO NO ES UNA
 //IMAGEN, RETORNA FALSE
 $esImagen = getimagesize($_FILES["archivo"]["tmp_name"]);
 

@@ -63,4 +63,10 @@ class Archivos
     {
         return copy($rutaOrigen, pathinfo($rutaOrigen, PATHINFO_DIRNAME) .  $nombreCarpetaBackup . pathinfo($rutaOrigen, PATHINFO_FILENAME) .  "_" . date($formatoFecha) . "." . pathinfo($rutaOrigen, PATHINFO_EXTENSION));
     }
+
+    public static function parsearPhpInput()
+    {
+        parse_str(file_get_contents("php://input"), $retorno);
+        return $retorno;
+    }
 }
