@@ -65,7 +65,9 @@
             break;
         case "PUT":
             $_PUT = Archivos::parsearPhpInput();
-            var_dump($_PUT);
+            foreach ($_PUT as $key => $value) {
+                echo $key . ": " . $value .  "<br>";
+            }
             break;
         case "DELETE":
             echo "en desarrollo<br>";
