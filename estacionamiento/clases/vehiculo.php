@@ -5,10 +5,10 @@
  */
 class Vehiculo
 {
-    const constructorFromArray = "Vehiculo::vehiculoFromArray";
-    private $patente;
-    private $fechaHoraIngreso;
-    private $importe;
+    const constructorFromArray = "Vehiculo::fromArray";
+    public $patente;
+    public $fechaHoraIngreso;
+    public $importe;
 
     function __construct($patente, $fechaHoraIngreso, $importe)
     {
@@ -17,18 +17,39 @@ class Vehiculo
         $this->importe = $importe;
     }
 
-    static function vehiculoFromArray($array)
+    static function fromArray($array)
     {
         return new self($array[0], $array[1], rtrim($array[2], PHP_EOL));
-    }
-
-    function mostrar()
-    {
-        echo "Patente: $this->patente | Ingreso: $this->fechaHoraIngreso | Importe: $this->importe<br>";
     }
 
     function toArray()
     {
         return array($this->patente, $this->fechaHoraIngreso, $this->importe);
+    }
+
+    function equalsPatente($patente)
+    {
+        return $this->patente === $patente;
+    }
+
+    function equalsVehiculo($vehiculo)
+    {
+        return $this->equalsPatente($vehiculo->patente);
+    }
+
+    function toString()
+    {
+        return "Patente: $this->patente | Ingreso: $this->fechaHoraIngreso | Importe: $this->importe<br>";
+    }
+
+    static function validarPatente($patente)
+    {
+        return preg_match("/^[a-z]{3}[0-9]{3}$/i", $patente)
+            || preg_match("/^[a-z]{2}[0-9]{3}[a-z]{2}$/i", $patente);
+    }
+
+    function mostrar()
+    {
+        echo $this->toString();
     }
 }

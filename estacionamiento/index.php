@@ -13,64 +13,55 @@
     <?php
     require_once "clases/vehiculo.php";
     require_once "clases/estacionamiento.php";
+    require_once "../toolbox/mensajes.php";
 
     $estacionamiento = new Estacionamiento("Lopecito Appart Car");
-
-    //$estacionamiento->leerCSV();
 
     $metodo = $_SERVER['REQUEST_METHOD'];
     switch ($metodo) {
         case "GET":
             if (isset($_GET["accion"])) {
                 switch ($_GET["accion"]) {
-                    case 'mostrarListado':
+                    case "getListado":
                         $estacionamiento->leerCSV();
-                        $estacionamiento->mostrar();
+                        $estacionamiento->mostrarListado();
                         break;
-                    case 'alta':
-                        if (isset($_GET["patente"])) {
-                            $estacionamiento->addVehiculo($_GET["patente"]);
-                        } else {
-                            echo "no hay patente informada<br>";
-                        }
+                    case "prueba":
+                        $patente = $_GET["patente"];
+                        echo preg_match("/^[a-z]{2}[0-9]{3}[a-z]{2}$/i", $patente);
                         break;
                     default:
-                        echo "en desarrollo<br>";
+                        mensajeError("en desarrollo<br>");
                         break;
                 }
+            } else {
+                mensajeError("accion no seteada");
             }
             break;
         case "POST":
-            if (isset($_POST["accion"])) {
-
-                switch ($_POST["accion"]) {
-                    case 'alta':
-                        if (isset($_POST["patente"])) {
-                            $estacionamiento->addVehiculo($_POST["patente"]);
-                        } else {
-                            echo "no hay patente informada<br>";
-                        }
-                        break;
-                    case 'guardarCsv':
-                        $estacionamiento->guardarCSV();
-                        break;
-                    case 'guardarListadoCsv':
-                        $estacionamiento->guardarListadoCSV();
-                        break;
-                    default:
-                        echo "en desarrollo<br>";
-                        break;
-                }
+            if (isset($_POST["patente"])) {
+                $estacionamiento->addVehiculo($_POST["patente"]);
+            } else {
+                mensajeError("no hay patente informada<br>");
             }
             break;
         case "PUT":
             $_PUT = Archivos::parsearPhpInput();
-            foreach ($_PUT as $key => $value) {
-                echo $key . ": " . $value .  "<br>";
+            if (isset($_PUT["patente"])) {
+                /* foreach ($_PUT as $key => $value) {
+                    mensajeError($key . ": " . $value .  "<br>");
+                } */
+                if ($estacionamiento->existsVehiculo($_PUT["patente"])) {
+                    $estacionamiento->putVehiculo($_PUT);
+                } else {
+                    $estacionamiento->pushVehiculo($_PUT["patente"]);
+                }
+            } else {
+                mensajeError("no hay patente informada<br>");
             }
             break;
         case "DELETE":
-            echo "en desarrollo<br>";
+            mensajeError("en desarrollo<br>");
             break;
     } //switch
 

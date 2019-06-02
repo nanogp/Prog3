@@ -1,6 +1,7 @@
 <?php
 
 require_once "../toolbox/archivos.php";
+require_once "../toolbox/mensajes.php";
 
 /**
  * 
@@ -22,6 +23,9 @@ class Estacionamiento
 
     function getListado()
     {
+        if (empty($this->listado)) {
+            $this->leerCSV();
+        }
         return $this->listado;
     }
 
@@ -35,12 +39,22 @@ class Estacionamiento
         return date(Estacionamiento::formatoFecha);
     }
 
-    function addVehiculo($patente)
+    function getVehiculo($patente)
     {
-        $this->putListado(new vehiculo($patente, $this->getFHActual(), "0"));
+
+        return $this->listado();
     }
 
-    function putListado($vehiculo)
+    function pushVehiculo($patente)
+    {
+        if (Vehiculo::validarPatente($patente)) {
+            $this->pushListado(new vehiculo($patente, $this->getFHActual(), "0"));
+        } else {
+            mensajeError("patente no valida");
+        }
+    }
+
+    function pushListado($vehiculo)
     {
         array_push($this->listado, $vehiculo);
         $this->guardarCSV($vehiculo);
@@ -61,13 +75,30 @@ class Estacionamiento
         Archivos::guardarListadoCSV(Estacionamiento::nombreArchivoCSV, $this->listado);
     }
 
-    function mostrar()
+    function existsVehiculo($patente)
+    {
+        $retorno = false;
+        if (empty($this->listado)) {
+            $this->leerCSV();
+        }
+
+        foreach ($this->listado as $vehiculo) {
+            if ($vehiculo->equalsPatente($patente)) {
+                $retorno = true;
+                break;
+            }
+        }
+
+        return $retorno;
+    }
+
+    function mostrarListado()
     {
         if (!$this->listado) {
             echo "listado vacio<br>";
         } else {
-            foreach ($this->listado as $v) {
-                $v->mostrar();
+            foreach ($this->listado as $vehiculo) {
+                $vehiculo->mostrar();
             }
         }
     }
