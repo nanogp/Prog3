@@ -13,6 +13,7 @@ class Archivos
         # code...
     }
 
+    //////////////////////////* CSV */
     static function leerCSV($nombreArchivo, $constructor, $separador = ",")
     {
         $archivo = fopen($nombreArchivo, "r");
@@ -37,7 +38,7 @@ class Archivos
         fclose($archivo);
     }
 
-    public static function GuardarListadoCSV($nombreArchivo, $listado, $separador = ",")
+    public static function guardarListadoCSV($nombreArchivo, $listado, $separador = ",")
     {
         $archivo = fopen($nombreArchivo, "w");
         foreach ($listado as $objeto) {
@@ -48,6 +49,45 @@ class Archivos
         }
         fclose($archivo);
     }
+
+    //////////////////////////* JSON */
+    static function leerJSON($nombreArchivo, $constructor)
+    {
+        $archivo = fopen($nombreArchivo, "r");
+        $retorno = array();
+        while (!feof($archivo)) {
+            $linea = trim(fgets($archivo));
+            if ($linea) {
+                $arrayDeDatos = explode($separador, $linea);
+                $dato = call_user_func($constructor, $arrayDeDatos);
+                array_push($retorno, $dato);
+            }
+        }
+        fclose($archivo);
+        return $retorno;
+    }
+
+    static function guardarJSON($nombreArchivo, $array)
+    {
+        $archivo = fopen($nombreArchivo, "a+");
+        $linea = implode($separador, $array);
+        fputs($archivo, $linea . PHP_EOL);
+        fclose($archivo);
+    }
+
+    public static function guardarListadoJSON($nombreArchivo, $listado)
+    {
+        $archivo = fopen($nombreArchivo, "w");
+        foreach ($listado as $objeto) {
+            if ($objeto) {
+                $linea = implode($separador, $objeto->toArray());
+                fputs($archivo, $linea . PHP_EOL);
+            }
+        }
+        fclose($archivo);
+    }
+    //////////////////////////* OTROS */
+
 
     public static function cambiarNombre($destino, $nombreNuevo, $concatFecha = false, $formatoFecha = Archivos::formatoFecha)
     {
