@@ -74,17 +74,17 @@ class Pizzeria
 
     function leerCSV()
     {
-        $this->listado = Archivos::leerCSV(Pizzeria::nombreArchivoCSV, Vehiculo::constructorFromArray);
+        $this->listado = Archivos::leerCSV(Pizzeria::archivoStockCSV, Pizza::constructorFromArray);
     }
 
     function guardarCSV($vehiculo)
     {
-        Archivos::guardarCSV(Pizzeria::nombreArchivoCSV, $vehiculo->toArray());
+        Archivos::guardarCSV(Pizzeria::archivoStockCSV, $vehiculo->toArray());
     }
 
     function guardarListadoCSV()
     {
-        Archivos::guardarListadoCSV(Pizzeria::nombreArchivoCSV, $this->listado);
+        Archivos::guardarListadoCSV(Pizzeria::archivoStockCSV, $this->listado);
     }
 
     function existsVehiculo($patente)
