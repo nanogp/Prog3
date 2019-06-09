@@ -1,6 +1,6 @@
 <?php
 
-require_once "../toolbox/archivos.php";
+require_once "../toolbox/archivosCSV.php";
 require_once "../toolbox/mensajes.php";
 
 /**
@@ -14,32 +14,40 @@ class Pizzeria
     const archivoVentasJSON = "archivos/ventas.json";
     const formatoFecha = "Y-m-d H:i";
     private $nombre;
-    private $listadoStock;
-    private $listadoVentas;
     private $fhInicio; //fecha-hora
 
     function __construct($nombre)
     {
         $this->nombre = $nombre;
-        $this->listadoStock = array();
-        $this->listadoVentas = array();
         $this->fhInicio = date(Pizzeria::formatoFecha);
     }
 
-    function getListadoStock()
+    function getStock()
     {
-        if (empty($this->listadoStock)) {
-            $this->leerCSV();
-        }
-        return $this->listadoStock;
+        return ArchivosCSV::traerTodos(Pizzeria::archivoStockCSV, Pizza::constructorFromArray);
     }
 
-    function getListadoVentas()
+    function getUnoStock($pk)
     {
-        if (empty($this->listadoVentas)) {
-            $this->leerCSV();
-        }
-        return $this->listadoVentas;
+        return ArchivosCSV::traerUno(
+            Pizzeria::archivoStockCSV,
+            Pizza::constructorFromArray,
+            $pk
+        );
+    }
+
+    function getVariosStock($pk)
+    {
+        return ArchivosCSV::traerVarios(
+            Pizzeria::archivoStockCSV,
+            Pizza::constructorFromArray,
+            $pk
+        );
+    }
+
+    function getVentas()
+    {
+        return ArchivosCSV::traerTodos(Pizzeria::archivoVentasCSV, Venta::constructorFromArray);
     }
 
     function getFhInicio()
@@ -62,7 +70,7 @@ class Pizzeria
         if (Vehiculo::validarPatente($patente)) {
             $this->pushListado(new vehiculo($patente, $this->getFHActual(), "0"));
         } else {
-            mensajeError("patente no valida");
+            mensaje("patente no valida");
         }
     }
 
@@ -72,19 +80,14 @@ class Pizzeria
         $this->guardarCSV($vehiculo);
     }
 
-    function leerCSV()
-    {
-        $this->listado = Archivos::leerCSV(Pizzeria::archivoStockCSV, Pizza::constructorFromArray);
-    }
-
     function guardarCSV($vehiculo)
     {
-        Archivos::guardarCSV(Pizzeria::archivoStockCSV, $vehiculo->toArray());
+        ArchivosCSV::guardarCSV(Pizzeria::archivoStockCSV, $vehiculo->toArray());
     }
 
     function guardarListadoCSV()
     {
-        Archivos::guardarListadoCSV(Pizzeria::archivoStockCSV, $this->listado);
+        ArchivosCSV::guardarListadoCSV(Pizzeria::archivoStockCSV, $this->listado);
     }
 
     function existsVehiculo($patente)
@@ -104,13 +107,14 @@ class Pizzeria
         return $retorno;
     }
 
-    function mostrarListado()
+    function mostrarListado($listado)
     {
-        if (!$this->listado) {
+        if (!$listado) {
             echo "listado vacio<br>";
         } else {
-            foreach ($this->listado as $vehiculo) {
-                $vehiculo->mostrar();
+            foreach ($listado as $obj) {
+                /* requiere que el objeto tenga su metodo mostrar() */
+                $obj->mostrar();
             }
         }
     }

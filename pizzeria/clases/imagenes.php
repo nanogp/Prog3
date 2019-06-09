@@ -1,12 +1,11 @@
 <?php
 
-require_once 'archivos.php';
-
-class Imagenes extends Archivos
+class Imagenes
 {
-    //constructor privado
-    private function __construct()
-    { }
+    function __construct()
+    {
+        # code...
+    }
 
     public static function marcaDeAgua($imgOrigen, $imgMarca)
     {

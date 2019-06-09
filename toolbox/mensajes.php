@@ -1,6 +1,6 @@
 <?php
 
-function mensajeError($msj)
+function mensaje($msj)
 {
     echo $msj;
 }

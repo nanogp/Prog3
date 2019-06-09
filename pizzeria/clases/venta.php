@@ -3,25 +3,27 @@
 /**
  * 
  */
-class Pizza
+class Venta
 {
-    const constructorFromArray = "Pizza::fromArray";
+    const constructorFromArray = "Venta::fromArray";
     public $sabor;
     public $tipo;
+    public $cliente;
     public $importe;
-    public $stock;
+    public $cantidad;
 
-    function __construct($sabor, $tipo, $importe, $stock)
+    function __construct($sabor, $tipo, $cliente, $importe, $cantidad)
     {
         $this->sabor = $sabor;
         $this->tipo = $tipo;
+        $this->cliente = $cliente;
         $this->importe = $importe;
-        $this->stock = $stock;
+        $this->cantidad = $cantidad;
     }
 
     static function fromArray($array)
     {
-        return new self($array[0], $array[1], $array[2], rtrim($array[3], PHP_EOL));
+        return new self($array[0], $array[1], $array[2], $array[3], rtrim($array[4], PHP_EOL));
     }
 
     function toArray()
@@ -43,15 +45,15 @@ class Pizza
         return $this->tipo === $tipo;
     }
 
-    function equals($pizza)
+    function equals($venta)
     {
-        return $this->equalsSabor($pizza->sabor) &&
-            $this->equalsTipo($pizza->sabor);
+        return $this->equalsSabor($venta->sabor) &&
+            $this->equalsTipo($venta->sabor);
     }
 
     function toString()
     {
-        return "Sabor: $this->sabor | Tipo: $this->tipo | Importe: $this->importe | Stock: $this->stock<br>";
+        return "Sabor: $this->sabor | Tipo: $this->tipo | Importe: $this->importe | cantidad: $this->cantidad<br>";
     }
 
     static function validarsabor($sabor)

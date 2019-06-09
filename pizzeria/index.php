@@ -12,10 +12,27 @@
 <body>
 
     <?php
+    require_once '../toolbox/mensajes.php';
+
     $metodo = $_SERVER['REQUEST_METHOD'];
     switch ($metodo) {
         case 'GET':
-            require_once 'listado.php';
+            if (isset($_GET['entidad'])) {
+                switch ($_GET['entidad']) {
+                    case 'stock':
+                        require_once 'listadoStock.php';
+                        break;
+                    case 'prueba':
+                        $patente = $_GET['patente'];
+                        //echo preg_match('/^[a-z]{2}[0-9]{3}[a-z]{2}$/i', $patente);
+                        break;
+                    default:
+                        mensaje('en desarrollo<br>');
+                        break;
+                }
+            } else {
+                mensaje('entidad no seteada');
+            }
             break;
         case 'POST':
             require_once 'alta.php';
