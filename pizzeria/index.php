@@ -20,11 +20,10 @@
             if (isset($_GET['entidad'])) {
                 switch ($_GET['entidad']) {
                     case 'stock':
-                        require_once 'listadoStock.php';
+                        require_once 'stock.php';
                         break;
-                    case 'prueba':
-                        $patente = $_GET['patente'];
-                        //echo preg_match('/^[a-z]{2}[0-9]{3}[a-z]{2}$/i', $patente);
+                    case 'ventas':
+                        require_once 'ventas.php';
                         break;
                     default:
                         mensaje('en desarrollo<br>');
@@ -35,13 +34,57 @@
             }
             break;
         case 'POST':
-            require_once 'alta.php';
+            if (isset($_POST['entidad'])) {
+                switch ($_POST['entidad']) {
+                    case 'stock':
+                        require_once 'stock.php';
+                        break;
+                    case 'ventas':
+                        require_once 'ventas.php';
+                        break;
+                    default:
+                        mensaje('en desarrollo<br>');
+                        break;
+                }
+            } else {
+                mensaje('entidad no seteada');
+            }
             break;
         case 'PUT':
-            require_once 'modificacion.php';
+            $_PUT = Archivos::parsearPhpInput();
+            if (isset($_PUT['entidad'])) {
+                switch ($_PUT['entidad']) {
+                    case 'stock':
+                        require_once 'stock.php';
+                        break;
+                    case 'ventas':
+                        require_once 'ventas.php';
+                        break;
+                    default:
+                        mensaje('en desarrollo<br>');
+                        break;
+                }
+            } else {
+                mensaje('entidad no seteada');
+            }
             break;
         case 'DELETE':
-            require_once 'baja.php';
+            $_DELETE = Archivos::parsearPhpInput();
+            if (isset($_DELETE['entidad'])) {
+                switch ($_DELETE['entidad']) {
+                    case 'stock':
+                        require_once 'stock.php';
+                        break;
+                    case 'ventas':
+                        require_once 'ventas.php';
+                        break;
+                    default:
+                        mensaje('en desarrollo<br>');
+                        break;
+                }
+            } else {
+                mensaje('entidad no seteada');
+            }
             break;
     }
     ?>

@@ -8,6 +8,9 @@ require_once "../toolbox/mensajes.php";
  */
 class Pizzeria
 {
+
+    //--------------------------------------------------------------------------------//
+    /* ATRIBUTOS */
     const archivoStockCSV = "archivos/stock.csv";
     const archivoStockJSON = "archivos/stock.json";
     const archivoVentasCSV = "archivos/ventas.csv";
@@ -16,24 +19,30 @@ class Pizzeria
     private $nombre;
     private $fhInicio; //fecha-hora
 
+    //--------------------------------------------------------------------------------//
+
+
+    //--------------------------------------------------------------------------------//
+    /* CONSTRUCTOR */
     function __construct($nombre)
     {
         $this->nombre = $nombre;
         $this->fhInicio = date(Pizzeria::formatoFecha);
     }
 
+    //--------------------------------------------------------------------------------//
+
+
+    //--------------------------------------------------------------------------------//
+    /* STOCK */
     function getStock()
     {
-        return ArchivosCSV::traerTodos(Pizzeria::archivoStockCSV, Pizza::constructorFromArray);
+        return Pizza::traerTodos(Pizzeria::archivoStockCSV);
     }
 
     function getUnoStock($pk)
     {
-        return ArchivosCSV::traerUno(
-            Pizzeria::archivoStockCSV,
-            Pizza::constructorFromArray,
-            $pk
-        );
+        return Pizza::traerUno(Pizzeria::archivoStockCSV, $pk);
     }
 
     function getVariosStock($pk)
@@ -45,6 +54,59 @@ class Pizzeria
         );
     }
 
+    function altaStock($pizza)
+    {
+        Pizza::agregarUno(
+            Pizzeria::archivoStockCSV,
+            $pizza
+        );
+    }
+
+    function borraStock($pk)
+    {
+        Pizza::borrarUno(
+            Pizzeria::archivoStockCSV,
+            $pk
+        );
+    }
+
+    function Modificar($p)
+    {
+        $arrPersonas = array();
+
+        $a = fopen("./txt/personas.txt", "r");
+
+        while (!feof($a)) {
+
+            $arr = explode("-", fgets($a));
+
+            if (count($arr) > 1) {
+                if ((int)$arr[2] == $p->GetDni()) {
+                    $persona = $p;
+                } else {
+                    $persona = new Persona();
+                    $persona->SetFoto($arr[3]);
+                    $persona->SetDni($arr[2]);
+                    $persona->SetNombre($arr[1]);
+                    $persona->SetApellido($arr[0]);
+                }
+                array_push($arrPersonas, $persona);
+            }
+        }
+        fclose($a);
+
+        $a = fopen("./txt/personas.txt", "w");
+        fclose($a);
+
+        foreach ($arrPersonas as $p) {
+            $p->Insertar();
+        }
+    }
+    //--------------------------------------------------------------------------------//
+
+
+    //--------------------------------------------------------------------------------//
+    /* VENTAS */
     function getVentas()
     {
         return ArchivosCSV::traerTodos(Pizzeria::archivoVentasCSV, Venta::constructorFromArray);
@@ -60,53 +122,11 @@ class Pizzeria
         return date(Pizzeria::formatoFecha);
     }
 
-    function getPizza($sabor, $tipo)
-    {
-        return $this->listadoStock();
-    }
+    //--------------------------------------------------------------------------------//
 
-    function pushVehiculo($patente)
-    {
-        if (Vehiculo::validarPatente($patente)) {
-            $this->pushListado(new vehiculo($patente, $this->getFHActual(), "0"));
-        } else {
-            mensaje("patente no valida");
-        }
-    }
 
-    function pushListado($vehiculo)
-    {
-        array_push($this->listado, $vehiculo);
-        $this->guardarCSV($vehiculo);
-    }
-
-    function guardarCSV($vehiculo)
-    {
-        ArchivosCSV::guardarCSV(Pizzeria::archivoStockCSV, $vehiculo->toArray());
-    }
-
-    function guardarListadoCSV()
-    {
-        ArchivosCSV::guardarListadoCSV(Pizzeria::archivoStockCSV, $this->listado);
-    }
-
-    function existsVehiculo($patente)
-    {
-        $retorno = false;
-        if (empty($this->listado)) {
-            $this->leerCSV();
-        }
-
-        foreach ($this->listado as $vehiculo) {
-            if ($vehiculo->equalsPatente($patente)) {
-                $retorno = true;
-                break;
-            }
-        }
-
-        return $retorno;
-    }
-
+    //--------------------------------------------------------------------------------//
+    /* OTROS */
     function mostrarListado($listado)
     {
         if (!$listado) {

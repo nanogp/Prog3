@@ -8,6 +8,19 @@ class ArchivosCSV extends Archivos
     private function __construct()
     { }
 
+    static function compararPk($arrayDeDatos, $pk)
+    {
+        for ($i = 0; $i < count($pk); $i++) {
+            if ($arrayDeDatos[$i] === $pk[$i]) {
+                $hayCoincidencia = true;
+            } else {
+                $hayCoincidencia = false;
+                break;
+            }
+        }
+        return $hayCoincidencia;
+    }
+
     static function traerUno($nombreArchivo, $constructor, $pk, $separador = ",")
     {
         $archivo = fopen($nombreArchivo, "r");
@@ -17,16 +30,7 @@ class ArchivosCSV extends Archivos
             if ($linea) {
                 $arrayDeDatos = explode($separador, $linea);
 
-                for ($i = 0; $i < count($pk); $i++) {
-                    if ($arrayDeDatos[$i] === $pk[$i]) {
-                        $hayCoincidencia = true;
-                    } else {
-                        $hayCoincidencia = false;
-                    }
-                }
-
-                if ($hayCoincidencia) {
-
+                if (ArchivosCSV::compararPk($arrayDeDatos, $pk)) {
                     /* encontre el dato*/
                     $retorno = call_user_func($constructor, $arrayDeDatos);
                     break; /* dejo de leer archivo */
@@ -81,10 +85,11 @@ class ArchivosCSV extends Archivos
         return $retorno;
     }
 
-    static function guardarUno($nombreArchivo, $array, $separador = ",")
+    static function guardarUno($nombreArchivo, $objeto, $separador = ",")
     {
+        /* requiere que el objeto a guardar tenga su metodo toArray() */
         $archivo = fopen($nombreArchivo, "a+");
-        $linea = implode($separador, $array);
+        $linea = implode($separador, $objeto->toArray());
         fputs($archivo, $linea . PHP_EOL);
         fclose($archivo);
     }
@@ -100,5 +105,28 @@ class ArchivosCSV extends Archivos
             }
         }
         fclose($archivo);
+    }
+
+    static function borrarUno($nombreArchivo, $constructor, $pk, $separador = ",")
+    {
+        $archivo = fopen($nombreArchivo, "r");
+        $arrayDepurado = array();
+        while (!feof($archivo)) {
+            $linea = trim(fgets($archivo));
+            if ($linea) {
+                $arrayDeDatos = explode($separador, $linea);
+
+                if (compararPk($arrayDeDatos, $pk)) {
+                    /* encontre el dato, salteo a la proxima lectura */
+                    continue;
+                } else {
+                    array_push($arrayDepurado, call_user_func($constructor, $arrayDeDatos));
+                }
+            }
+        }
+        fclose($archivo);
+
+        /* ahora guardo en el archivo el array depurado */
+        guardarTodos($nombreArchivo, $arrayDepurado);
     }
 }
