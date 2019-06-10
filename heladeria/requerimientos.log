@@ -1,0 +1,21 @@
+llama a index.php, segun llamada se dirige a un archivo.
+
+1-POST: HeladoCarga.php, segun llamada se dirige a un archivo
+se ingresan precio, sabor, tipo (crema o agua), cant kilos
+se guardan los datos tomando el sabor y el tipo como identificador. Si existe acumula.
+Archivo: Helados.txt o json o csv
+
+2-GET: ConsultarHelado.php
+Se ingresa tipo y sabor. Si existe devuelve SI HAY. Si hay sabor pero no tipo se avisa que hay sabor pero no tipo.
+
+3-POST: AltaVenta.php se guarda en Ventas.txt todos los datos. Si no hay existencia suficiente, mostrar la cantidad disponible. Si alcanza se resta del stock.
+
+4-POST: AltaVenta con imagenes. Guarda una imagen con sabor y fecha de la venta. /fotosVentas/sabor_fecha.png
+
+5-GET Listado por tipo o sabor. Solamente recibe el tipo, y la busqueda se hace sobre el tipo y el sabor. Devuelve las fotos en un elemento image.
+
+6-PUT Modificar HeladoCarga.php Se le pasa sabor y tipo, pudiendo modificar precio y stock.
+
+7-Alta de Helado con foto /fotosHelados
+
+8-DELETE Eliminar Helado por tipo y sabor. Foto a /backDeFotos

@@ -1,10 +1,6 @@
 <?php
 
-if (
-    isset($_POST['sabor']) &&
-    isset($_POST['tipo']) &&
-    isset($_POST['importe'])
-) {
+if (isset($_POST['sabor']) && isset($_POST['tipo']) && isset($_POST['importe'])) {
     if (isset($_POST['stock'])) {
         $cantidad = $_POST['stock'];
     } else {
