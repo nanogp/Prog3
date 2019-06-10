@@ -1,10 +1,5 @@
 <?php
-require_once 'clases/pizza.php';
-require_once 'clases/pizzeria.php';
 
-$pizzeria = new Pizzeria('Los HDP');
-
-$metodo = $_SERVER['REQUEST_METHOD'];
 if (isset($_GET['accion'])) {
     $pk = array();
     switch ($_GET['accion']) {
@@ -36,6 +31,24 @@ if (isset($_GET['accion'])) {
             } else {
                 mensaje('no hay ningun dato de la PK');
             }
+            break;
+        case 'pruebas':
+            $a = array();
+            $n = new stdClass();
+            $n->nombre = 'qwe';
+            $n->dni = '123';
+            array_push($a, $n);
+            $n = new stdClass();
+            $n->nombre = 'asd';
+            $n->dni = '456';
+            array_push($a, $n);
+            $n = new stdClass();
+            $n->nombre = 'zxc';
+            $n->dni = '789';
+            array_push($a, $n);
+            $a = array_remove_object($a, array('qwe', '123'));
+            var_dump($a);
+
             break;
         default:
             mensaje(var_dump($_GET));

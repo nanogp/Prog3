@@ -22,7 +22,7 @@ class Pizza
 
     //--------------------------------------------------------------------------------//
     /* CONSTRUCTOR */
-    function __construct($sabor, $tipo, $importe, $stock)
+    function __construct($sabor, $tipo, $importe = 0, $stock = 0)
     {
         $this->sabor = $sabor;
         $this->tipo = $tipo;
@@ -86,6 +86,16 @@ class Pizza
             $pk
         );
     }
+
+
+    static function modificarUno($nombreArchivo, $pizza)
+    {
+        return ArchivosCSV::modificarUno(
+            $nombreArchivo,
+            Pizza::constructorFromArray,
+            $pizza
+        );
+    }
     //--------------------------------------------------------------------------------//
 
 
@@ -123,7 +133,7 @@ class Pizza
     function equals($pizza)
     {
         return $this->equalsSabor($pizza->sabor) &&
-            $this->equalsTipo($pizza->sabor);
+            $this->equalsTipo($pizza->tipo);
     }
 
     function toString()

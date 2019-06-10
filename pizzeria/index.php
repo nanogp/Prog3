@@ -13,6 +13,7 @@
 
     <?php
     require_once '../toolbox/mensajes.php';
+    require_once '../toolbox/archivos.php';
 
     $metodo = $_SERVER['REQUEST_METHOD'];
     switch ($metodo) {

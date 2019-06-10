@@ -2,5 +2,5 @@
 
 function mensaje($msj)
 {
-    echo $msj;
+    echo $msj . '<br>';
 }

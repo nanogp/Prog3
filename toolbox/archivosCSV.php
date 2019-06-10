@@ -8,19 +8,6 @@ class ArchivosCSV extends Archivos
     private function __construct()
     { }
 
-    static function compararPk($arrayDeDatos, $pk)
-    {
-        for ($i = 0; $i < count($pk); $i++) {
-            if ($arrayDeDatos[$i] === $pk[$i]) {
-                $hayCoincidencia = true;
-            } else {
-                $hayCoincidencia = false;
-                break;
-            }
-        }
-        return $hayCoincidencia;
-    }
-
     static function traerUno($nombreArchivo, $constructor, $pk, $separador = ",")
     {
         $archivo = fopen($nombreArchivo, "r");
@@ -30,7 +17,7 @@ class ArchivosCSV extends Archivos
             if ($linea) {
                 $arrayDeDatos = explode($separador, $linea);
 
-                if (ArchivosCSV::compararPk($arrayDeDatos, $pk)) {
+                if (self::compararPk($arrayDeDatos, $pk)) {
                     /* encontre el dato*/
                     $retorno = call_user_func($constructor, $arrayDeDatos);
                     break; /* dejo de leer archivo */
@@ -116,7 +103,7 @@ class ArchivosCSV extends Archivos
             if ($linea) {
                 $arrayDeDatos = explode($separador, $linea);
 
-                if (compararPk($arrayDeDatos, $pk)) {
+                if (self::compararPk($arrayDeDatos, $pk)) {
                     /* encontre el dato, salteo a la proxima lectura */
                     continue;
                 } else {
@@ -127,6 +114,31 @@ class ArchivosCSV extends Archivos
         fclose($archivo);
 
         /* ahora guardo en el archivo el array depurado */
-        guardarTodos($nombreArchivo, $arrayDepurado);
+        self::guardarTodos($nombreArchivo, $arrayDepurado);
+    }
+
+
+    static function modificarUno($nombreArchivo, $constructor, $objeto, $separador = ",")
+    {
+        /* requiere que el objeto tenga sus metodos toArray() y pkToArray() */
+        $archivo = fopen($nombreArchivo, "r");
+        $arrayDepurado = array();
+        while (!feof($archivo)) {
+            $linea = trim(fgets($archivo));
+            if ($linea) {
+                $arrayDeDatos = explode($separador, $linea);
+
+                if (self::compararPk($arrayDeDatos, $objeto->pkToArray())) {
+                    /* encontre el dato, lo reemplazo con el nuevo */
+                    array_push($arrayDepurado, call_user_func($constructor, $objeto->toArray()));
+                } else {
+                    array_push($arrayDepurado, call_user_func($constructor, $arrayDeDatos));
+                }
+            }
+        }
+        fclose($archivo);
+
+        /* ahora guardo en el archivo el array depurado */
+        self::guardarTodos($nombreArchivo, $arrayDepurado);
     }
 }
