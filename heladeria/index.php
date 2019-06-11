@@ -35,7 +35,7 @@
         case "POST":
             switch (key($_POST)) {
                 case 'nuevoHelado':
-                    if (true) {
+                    if (isset($_FILES["foto"])) {
                         require_once 'manejadores/7-altaHeladoConFoto.php';
                     } else {
                         require_once 'manejadores/1-heladoCarga.php';

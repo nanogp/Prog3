@@ -7,7 +7,6 @@ if (isset($_POST['sabor']) && isset($_POST['tipo']) && isset($_POST['precio'])) 
     } else {
         $cantidad = 0;
     }
-vardump($_POST);
     Heladeria::altaHeladoConFoto($_POST['sabor'], $_POST['tipo'], $_POST['precio'], $cantidad, $_FILES["foto"]);
 } else {
     mensaje('faltan datos');

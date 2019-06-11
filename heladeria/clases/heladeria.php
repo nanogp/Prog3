@@ -107,8 +107,25 @@ class Heladeria
 
     static function altaHeladoConFoto($sabor,  $tipo,  $precio,  $cantidad,  $foto)
     {
-        self::altaHelado($sabor,  $tipo,  $precio,  $cantidad);
-        Upload::cargarImagenPorNombre($foto, ($sabor .  $tipo), self::rutaFotosHelados);
+        if (in_array($tipo, Helado::getTiposValidos())) {
+            $helado = new Helado($sabor,  $tipo,  $precio,  $cantidad);
+
+            $listado = self::getStock();
+            $existente = Helado::contains($listado,  $helado->pkToArray());
+
+            if ($existente === null) {
+                Helado::agregarUno(Heladeria::archivoStockCSV,  $helado);
+                Upload::cargarImagenPorNombre($foto, ($sabor .  $tipo), self::rutaFotosHelados);
+                mensaje('se hizo el alta ingresada');
+            } else {
+                mensaje('se agrego stock ingresado al helado existente');
+                $existente->cantidad +=  $cantidad;
+                $existente->mostrar();
+                Heladeria::putStock($listado);
+            }
+        } else {
+            mensaje('tipo de helado invalido');
+        }
     }
 
     static function modificacionHelado($sabor,  $tipo,  $precio,  $cantidad)
@@ -192,7 +209,7 @@ class Heladeria
 
             echo  "<table>";
             $aux =
-            "<tr>
+                "<tr>
             <th> sabor </th>
             <th> tipo </th>
             <th> precio </th>
