@@ -14,7 +14,7 @@ if (isset($_GET['sabor']) && isset($_GET['tipo'])) {
         $helado->mostrar();
     } else {
 
-        $helados = $heladeria->getVariosStock($pk);
+        $helados = $heladeria->getVariosStock($_GET['sabor']);
         if ($helados) {
             foreach ($helados as $h) {
                 if ($h->cantidad > 0) {

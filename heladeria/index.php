@@ -23,8 +23,8 @@
                 case 'consultarHelado':
                     require_once 'manejadores/2-consultarHelado.php';
                     break;
-                case 'consultarFiltrado':
-                    require_once 'manejadores/5-listadoPorTipo.php';
+                case 'listarHelados':
+                    require_once 'manejadores/5-listarHelados.php';
                     break;
                 default:
                     mensaje('PRUEBAS:');
@@ -35,7 +35,7 @@
         case "POST":
             switch (key($_POST)) {
                 case 'nuevoHelado':
-                    if (isset($_FILES["foto"])) {
+                    if (true) {
                         require_once 'manejadores/7-altaHeladoConFoto.php';
                     } else {
                         require_once 'manejadores/1-heladoCarga.php';

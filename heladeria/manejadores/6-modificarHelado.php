@@ -1,33 +1,22 @@
 <?php
-require_once 'clases/helado.php';
 require_once 'clases/heladeria.php';
 
-if (
-    isset($_PUT['sabor']) &&
-    isset($_PUT['tipo'])
-) {
-    if (isset($_PUT['importe'])) {
-        $importe = $_PUT['importe'];
+
+if (isset($_PUT['sabor']) && isset($_PUT['tipo'])) {
+
+    if (isset($_PUT['precio'])) {
+        $precio = $_PUT['precio'];
     } else {
-        $importe  = 0;
+        $precio = 0;
     }
 
-    if (isset($_PUT['stock'])) {
-        $cantidad = $_PUT['stock'];
+    if (isset($_PUT['cantidad'])) {
+        $cantidad = $_PUT['cantidad'];
     } else {
-        $cantidad  = 0;
+        $cantidad = 0;
     }
 
-    $helado = new Helado($_PUT['sabor'], $_PUT['tipo'], $importe, $cantidad);
-
-    $listado = Helado::traerTodos(Heladeria::archivoStockCSV);
-
-    if (!Archivos::contieneListado($listado, $helado->pkToArray())) {
-        mensaje('no se encontro el registro buscado');
-    } else {
-        Helado::modificarUno(Heladeria::archivoStockCSV, $helado);
-        mensaje('se actualizo el registro ingresado');
-    }
+    Heladeria::modificacionHelado($_PUT['sabor'], $_PUT['tipo'], $precio, $cantidad);
 } else {
     mensaje('faltan datos para identificar el registro a modificar');
 }
