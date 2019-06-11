@@ -20,10 +20,10 @@
     switch ($_SERVER['REQUEST_METHOD']) {
         case "GET":
             switch (key($_GET)) {
-                case 'consultaHelado':
+                case 'consultarHelado':
                     require_once 'manejadores/2-consultarHelado.php';
                     break;
-                case 'consultaFiltrado':
+                case 'consultarFiltrado':
                     require_once 'manejadores/5-listadoPorTipo.php';
                     break;
                 default:
