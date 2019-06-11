@@ -22,11 +22,11 @@ class Helado
 
     //--------------------------------------------------------------------------------//
     /* CONSTRUCTOR */
-    function __construct($sabor, $tipo, $precio = 0, $cantidad = 0)
+    function __construct($sabor, $tipo, $precio, $cantidad = 0)
     {
         $this->sabor = $sabor;
         $this->tipo = $tipo;
-        $this->importe = $precio;
+        $this->precio = $precio;
         $this->cantidad = $cantidad;
     }
     //--------------------------------------------------------------------------------//
@@ -143,7 +143,7 @@ class Helado
 
     function toString()
     {
-        return "Sabor: $this->sabor | Tipo: $this->tipo | Precio: $this->importe | Cantidad KGs: $this->cantidad<br>";
+        return "Sabor: $this->sabor | Tipo: $this->tipo | Precio: $this->precio | Cantidad KGs: $this->cantidad<br>";
     }
 
     function mostrar()
