@@ -1,5 +1,7 @@
 <?php
 
+require_once "./toolbox/archivosCSV.php";
+
 /**
  * 
  */
@@ -34,6 +36,18 @@ class Helado
 
     //--------------------------------------------------------------------------------//
     /* METODOS DE CLASE */
+    static function contains($listado, $pk)
+    {
+        $retorno = null;
+        foreach ($listado as $helado) {
+            if (Archivos::compararPk($helado->toArray(), $pk)) {
+                $retorno = $helado;
+                break;
+            }
+        }
+        return $retorno;
+    }
+
     static function getTiposValidos()
     {
         return array('crema', 'agua');

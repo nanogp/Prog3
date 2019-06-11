@@ -48,6 +48,7 @@ class Archivos
 
     static function contieneListado($listado, $pk)
     {
+        $hayCoincidencia = null;
         foreach ($listado as $objeto) {
             $hayCoincidencia = self::compararPk($objeto->toArray(), $pk);
             if ($hayCoincidencia) {
@@ -61,9 +62,9 @@ class Archivos
     {
         return array_filter(
             $array,
-                function ($objeto) use ($pk) {
-                    return !self::compararPk($objeto->toArray(), $pk);
-                }
-            );
+            function ($objeto) use ($pk) {
+                return !self::compararPk($objeto->toArray(), $pk);
+            }
+        );
     }
 }

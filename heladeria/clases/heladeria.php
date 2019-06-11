@@ -1,5 +1,7 @@
 <?php
 
+require_once "helado.php";
+//require_once "ventas.php";
 require_once "./toolbox/archivosCSV.php";
 require_once "./toolbox/mensajes.php";
 
@@ -33,17 +35,17 @@ class Heladeria
 
     //--------------------------------------------------------------------------------//
     /* STOCK */
-    function getStock()
+    static function getStock()
     {
         return Helado::traerTodos(self::archivoStockCSV);
     }
 
-    function getUnoStock($pk)
+    static function getUnoStock($pk)
     {
         return Helado::traerUno(self::archivoStockCSV, $pk);
     }
 
-    function getVariosStock($pk)
+    static function getVariosStock($pk)
     {
         return ArchivosCSV::traerVarios(
             self::archivoStockCSV,
@@ -52,7 +54,16 @@ class Heladeria
         );
     }
 
-    function altaStock($helado)
+    static function putStock($listado)
+    {
+        ArchivosCSV::guardarTodos(
+            self::archivoStockCSV,
+            $listado
+        );
+    }
+
+
+    static function altaStock($helado)
     {
         Helado::agregarUno(
             self::archivoStockCSV,
@@ -60,7 +71,7 @@ class Heladeria
         );
     }
 
-    function borraStock($pk)
+    static function borraStock($pk)
     {
         Helado::borrarUno(
             self::archivoStockCSV,
@@ -73,17 +84,17 @@ class Heladeria
 
     //--------------------------------------------------------------------------------//
     /* VENTAS */
-    function getVentas()
+    static function getVentas()
     {
         return ArchivosCSV::traerTodos(self::archivoVentasCSV, Venta::constructorFromArray);
     }
 
-    function getFhInicio()
+    static function getFhInicio()
     {
         return $this->fhInicio;
     }
 
-    function getFHActual()
+    static function getFHActual()
     {
         return date(self::formatoFecha);
     }
@@ -93,7 +104,7 @@ class Heladeria
 
     //--------------------------------------------------------------------------------//
     /* OTROS */
-    function mostrarListado($listado)
+    static function mostrarListado($listado)
     {
         if (!$listado) {
             echo "listado vacio<br>";
@@ -104,4 +115,30 @@ class Heladeria
             }
         }
     }
+
+
+    //--------------------------------------------------------------------------------//
+    /* GESTION */
+    static function altaHelado($sabor, $tipo, $precio, $cantidad)
+    {
+        if (in_array($tipo, Helado::getTiposValidos())) {
+            $helado = new Helado($sabor, $tipo, $precio, $cantidad);
+
+            $listado = self::getStock();
+            $existente = Helado::contains($listado, $helado->pkToArray());
+
+            if ($existente === null) {
+                Helado::agregarUno(Heladeria::archivoStockCSV, $helado);
+                mensaje('se hizo el alta ingresada');
+            } else {
+                mensaje('se agrego stock ingresado al helado existente');
+                $existente->cantidad += $cantidad;
+                $existente->mostrar();
+                Heladeria::putStock($listado);
+            }
+        } else {
+            mensaje('tipo de helado invalido');
+        }
+    }
+    //--------------------------------------------------------------------------------//
 }
