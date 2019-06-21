@@ -2,11 +2,45 @@
 
 require_once 'archivos.php';
 
-class ArchivosJSON extends Archivos
+class ArchivosCSV extends Archivos
 {
     //constructor privado
     private function __construct()
     { }
+
+    public static function compararPk($arrayDeDatos, $pk)
+    {
+        for ($i = 0; $i < count($pk); $i++) {
+            if ($arrayDeDatos[$i] === $pk[$i]) {
+                $hayCoincidencia = true;
+            } else {
+                $hayCoincidencia = false;
+                break;
+            }
+        }
+        return $hayCoincidencia;
+    }
+
+    public static function contieneListado($listado, $pk)
+    {
+        foreach ($listado as $objeto) {
+            $hayCoincidencia = self::compararPk($objeto->toArray(), $pk);
+            if ($hayCoincidencia) {
+                break;
+            }
+        }
+        return $hayCoincidencia;
+    }
+
+    public static function borrarDeListado($array, $pk)
+    {
+        return array_filter(
+            $array,
+            function ($objeto) use ($pk) {
+                return !self::compararPk($objeto->toArray(), $pk);
+            }
+        );
+    }
 
     static function traerUno($nombreArchivo, $constructor, $pk, $separador = ",")
     {
