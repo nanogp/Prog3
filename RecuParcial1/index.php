@@ -37,8 +37,17 @@
             }
             break;
         case 'POST':
-            require_once 'llamadores/PizzaConsultar.php';
-            break;
+            switch (key($_POST)) {
+                case 'pizzaconsultar':
+                    require_once 'llamadores/PizzaConsultar.php';
+                    break;
+                case 'altaventa':
+                    require_once 'llamadores/AltaVenta.php';
+                    break;
+                default:
+                    mensaje('puto el que lee');
+                    break;
+            }
     }
     ?>
 

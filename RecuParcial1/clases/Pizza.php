@@ -109,6 +109,11 @@ class Pizza
         return ArchivosJSON::contiene($lista, $pk);
     }
 
+    public static function buscar($lista, $pk)
+    {
+        return ArchivosJSON::buscar($lista, $pk);
+    }
+
     public static function mostrarLista($lista)
     {
         foreach ($lista as $pizza) {

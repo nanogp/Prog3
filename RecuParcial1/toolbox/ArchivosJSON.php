@@ -35,6 +35,18 @@ class ArchivosJSON extends Archivos
         return $hayCoincidencia;
     }
 
+    public static function buscar($listado, $pk)
+    {
+        foreach ($listado as $objeto) {
+            $hayCoincidencia = self::compararPk($objeto->toAssociativeArray(), $pk);
+            if ($hayCoincidencia) {
+                $hayCoincidencia = $objeto;
+                break;
+            }
+        }
+        return $hayCoincidencia;
+    }
+
     public static function borrarDeListado($array, $pk)
     {
         return array_filter(

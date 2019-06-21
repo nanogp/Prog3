@@ -5,7 +5,6 @@
  */
 class Archivos
 {
-
     const formatoFecha = "YmdHis";
 
     //constructor privado

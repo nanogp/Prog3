@@ -8,14 +8,17 @@ class ArchivosCSV extends Archivos
     private function __construct()
     { }
 
-    public static function compararPk($arrayDeDatos, $pk)
+    //unique false para matchear con cualquier atributo
+    public static function compararPk($arrayDeDatos, $pk, $unique = true)
     {
         for ($i = 0; $i < count($pk); $i++) {
             if ($arrayDeDatos[$i] === $pk[$i]) {
                 $hayCoincidencia = true;
             } else {
                 $hayCoincidencia = false;
-                break;
+                if ($unique) {
+                    break; //rompo for con primera key que no coincide
+                }
             }
         }
         return $hayCoincidencia;
@@ -72,15 +75,7 @@ class ArchivosCSV extends Archivos
             if ($linea) {
                 $arrayDeDatos = explode($separador, $linea);
                 $hayCoincidencia = false;
-                for ($i = 0; $i < count($pk); $i++) {
-                    foreach ($arrayDeDatos as $key => $value) {
-                        if ($value === $pk[$i]) {
-                            $hayCoincidencia = true;
-                        }
-                    }
-                }
-
-                if ($hayCoincidencia) {
+                if (self::compararPk($arrayDeDatos, $pk, false)) {
                     /* agrego dato al array y sigo leyendo el archivo*/
                     array_push($retorno,  call_user_func($constructor, $arrayDeDatos));
                 }

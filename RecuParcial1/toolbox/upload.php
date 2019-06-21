@@ -1,7 +1,7 @@
 <?php
 
-require_once "./clases/archivos.php";
-require_once "./clases/imagenes.php";
+require_once "toolbox/Archivos.php";
+require_once "toolbox/Imagenes.php";
 
 //INDICO CUAL SERA EL DESTINO DEL ARCHIVO SUBIDO
 $destino = "archivos/" . trim($_FILES["archivo"]["name"], "_");
@@ -30,6 +30,7 @@ if (file_exists($destino)) {
 	//$uploadOk = FALSE;
 	Archivos::copiarABackup($destino);
 }
+
 //VERIFICO EL TAMAÑO MAXIMO QUE PERMITO SUBIR
 if ($_FILES["archivo"]["size"] > 500000) {
 	echo "El archivo es demasiado grande. Verifique!!!";
