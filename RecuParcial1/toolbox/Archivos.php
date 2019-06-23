@@ -11,19 +11,48 @@ class Archivos
     private function __construct()
     { }
 
-    public static function cambiarNombre($rutaOrigen, $nombreNuevo, $concatFecha = false, $formatoFecha = self::formatoFecha)
+    public static function validarExtensiones($file, array $extensiones)
     {
-        $retorno = pathinfo($rutaOrigen, PATHINFO_DIRNAME) . "/" . $nombreNuevo;
-        if ($concatFecha) {
-            $retorno = $retorno . "_" . date($formatoFecha);
+        $retorno = false;
+        $tipoArchivo = pathinfo($file['name'], PATHINFO_EXTENSION);
+
+        foreach ($extensiones as $ext) {
+            if (strtolower($tipoArchivo) === strtolower($ext)) {
+                $retorno = true;
+                break;
+            }
         }
-        $retorno =  $retorno . "." . pathinfo($rutaOrigen, PATHINFO_EXTENSION);
+
         return $retorno;
     }
 
-    public static function copiarABackup($rutaOrigen, $nombreCarpetaBackup = "/backup/", $concatFecha = true, $formatoFecha = self::formatoFecha)
+    public static function copiarABackup($rutaOrigen, $rutaBackup = null, $concatFecha = true, $formatoFecha = self::formatoFecha)
     {
-        return copy($rutaOrigen, pathinfo($rutaOrigen, PATHINFO_DIRNAME) .  $nombreCarpetaBackup . pathinfo($rutaOrigen, PATHINFO_FILENAME) .  "_" . date($formatoFecha) . "." . pathinfo($rutaOrigen, PATHINFO_EXTENSION));
+        //base de ruta
+        $rutaDestino =  pathinfo($rutaOrigen, PATHINFO_DIRNAME);
+
+        if ($rutaBackup) {
+            $rutaDestino .= $rutaBackup;
+        } else {
+            $rutaDestino .= "/backup/";
+        }
+
+        //nombre de archivo
+        $rutaDestino .= pathinfo($rutaOrigen, PATHINFO_FILENAME);
+
+        //fecha
+        if ($concatFecha) {
+            $rutaDestino .=  "_" . date($formatoFecha);
+        }
+
+        //extension
+        $rutaDestino .= "." . pathinfo($rutaOrigen, PATHINFO_EXTENSION);
+
+        var_dump($rutaOrigen);
+        mensaje('<br>');
+        var_dump($rutaDestino);
+        mensaje('<br>');
+        return copy($rutaOrigen, $rutaDestino);
     }
 
     public static function parsearPhpInput()

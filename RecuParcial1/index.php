@@ -17,37 +17,36 @@
     switch ($_SERVER['REQUEST_METHOD']) {
         case 'GET':
             switch (key($_GET)) {
-                case 'pruebas':
-                    require_once 'clases/Pizzeria.php';
-
-                    $p = new Pizza(2, 'muzza', 'molde', 'precio', 'cantidad');
-                    //Pizza::mostrarLista(Pizza::traerLista(Pizzeria::rutaArchivoPizzas));
-                    //Pizzeria::pizzaConsultar('muzza', 'piedras');
-
-                    Pizza::mostrarLista(ArchivosJSON::traerVarios(
-                        Pizzeria::rutaArchivoPizzas,
-                        Pizza::nombreConstructorJSON,
-                        array('tipo' => 'molde')
-                    ));
-
+                case 'pizzacarga':
+                    require_once 'llamadores/PizzaCarga.php ';
                     break;
                 default:
-                    require_once 'llamadores/PizzaCarga.php';
+                    var_dump($_GET);
                     break;
             }
             break;
         case 'POST':
             switch (key($_POST)) {
+                case 'pizzacarga':
+                    require_once 'llamadores/PizzaCargaFoto.php ';
+                    break;
                 case 'pizzaconsultar':
-                    require_once 'llamadores/PizzaConsultar.php';
+                    require_once 'llamadores/PizzaConsultar.php ';
                     break;
                 case 'altaventa':
-                    require_once 'llamadores/AltaVenta.php';
+                    require_once 'llamadores/AltaVenta.php ';
+                    break;
+                case 'pizzacargaplus':
+                    require_once 'llamadores/PizzaCargaPlus.php ';
                     break;
                 default:
-                    mensaje('puto el que lee');
+                    var_dump($_POST);
                     break;
             }
+            break;
+        case 'DELETE':
+            require_once 'llamadores/BorrarPizza.php';
+            break;
     }
     ?>
 

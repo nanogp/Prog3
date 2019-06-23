@@ -135,9 +135,68 @@ class ArchivosJSON extends Archivos
         foreach ($listado as $objeto) {
             if ($objeto) {
                 $linea = json_encode($objeto->toAssociativeArray(), JSON_UNESCAPED_UNICODE);
-                fputs($archivo, $linea . PHP_EOL);
+                $retorno = fputs($archivo, $linea . PHP_EOL);
             }
         }
         fclose($archivo);
+        return $retorno;
+    }
+
+    public static function borrarUno($rutaArchivo, $constructor, $pk)
+    {
+        $archivo = fopen($rutaArchivo, "r");
+        $arrayDepurado = array();
+        while (!feof($archivo)) {
+            $linea = trim(fgets($archivo));
+            if ($linea) {
+                $arrayDeDatos = json_decode($linea, true);
+                if (self::compararPk($arrayDeDatos, $pk)) {
+                    /* encontre el dato, salteo a la proxima lectura */
+                    continue;
+                } else {
+                    array_push($arrayDepurado, call_user_func($constructor, $arrayDeDatos));
+                }
+            }
+        }
+        fclose($archivo);
+
+        /* ahora guardo en el archivo el array depurado */
+        self::guardarTodos($rutaArchivo, $arrayDepurado);
+    }
+
+
+    public static function modificarUno($rutaArchivo, $constructor, $pk, $reemplazar = null, $acumular = null)
+    {
+        $retorno = false;
+        $archivo = fopen($rutaArchivo, "r");
+        $arrayDepurado = array();
+
+        while (!feof($archivo)) {
+            $linea = trim(fgets($archivo));
+            if ($linea) {
+                $arrayDeDatos = json_decode($linea, true);
+
+                if (self::compararPk($arrayDeDatos, $pk)) {
+                    /* encontre el dato, lo modifico */
+                    foreach ($reemplazar as $key => $value) {
+                        $arrayDeDatos[$key] = $value;
+                    }
+
+                    foreach ($acumular as $key => $value) {
+                        $arrayDeDatos[$key] += $value;
+                    }
+
+                    $objeto = call_user_func($constructor, $arrayDeDatos);
+                    array_push($arrayDepurado, $objeto);
+                } else {
+                    array_push($arrayDepurado, call_user_func($constructor, $arrayDeDatos));
+                }
+            }
+        }
+        fclose($archivo);
+
+        /* ahora guardo en el archivo el array depurado */
+        $retorno = self::guardarTodos($rutaArchivo, $arrayDepurado);
+        return $retorno;
     }
 }

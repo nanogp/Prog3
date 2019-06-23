@@ -58,12 +58,12 @@ class Pizza
         $this->tipo = $tipo;
     }
 
-    public function getprecio()
+    public function getPrecio()
     {
         return $this->precio;
     }
 
-    public function setprecio($precio)
+    public function setPrecio($precio)
     {
         $this->precio = $precio;
     }
@@ -119,6 +119,26 @@ class Pizza
         foreach ($lista as $pizza) {
             $pizza->mostrar();
         }
+    }
+
+    public static function modificarUno($rutaArchivo, $pizza)
+    {
+        return ArchivosJSON::modificarUno(
+            $rutaArchivo,
+            self::nombreConstructorJSON,
+            $pizza->pkToAssociativeArray(),
+            array('precio' => $pizza->getPrecio()),
+            array('cantidad' => $pizza->getCantidad())
+        );
+    }
+
+    public static function borrarUno($rutaArchivo, $pk)
+    {
+        return ArchivosJSON::borrarUno(
+            $rutaArchivo,
+            self::nombreConstructorJSON,
+            $pk
+        );
     }
 
 

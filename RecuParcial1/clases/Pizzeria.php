@@ -2,15 +2,18 @@
 
 require_once 'clases/Pizza.php';
 require_once 'clases/Venta.php';
-require_once 'toolbox/Imagenes.php';
+require_once 'toolbox/Upload.php';
 
 class Pizzeria
 {   //--------------------------------------------------------------------------------//
     /* ATRIBUTOS */
+
     const rutaArchivoPizzas = "archivos/Pizza.txt";
     const rutaArchivoVentas = "archivos/Venta.txt";
-    const rutaFotoVentas = "archivos/Venta.txt";
-    const rutaImgPizzas =  "archivos/ImagenesDePizzas/";
+    const rutaImgVentas = "archivos/ImagenesDeLaVenta/";
+    const rutaImgPizzas = "archivos/ImagenesDePizzas/";
+    const rutaBackupImg = "/../backUpFotos​/";
+    const rutaImgMarcaDeAgua = "archivos/imgMarcaDeAgua.png";
 
     //--------------------------------------------------------------------------------//
 
@@ -24,7 +27,29 @@ class Pizzeria
 
     //--------------------------------------------------------------------------------//
     /* METODOS DE CLASE */
-    public static function pizzaAlta($sabor, $tipo, $precio, $cantidad)
+
+    private static function pizzaSubirFoto($sabor, $tipo, $foto)
+    {
+        $destino =
+            self::rutaImgPizzas .
+            $tipo .
+            $sabor .
+            '.' .
+            pathinfo($foto['name'], PATHINFO_EXTENSION);
+
+        $destinoBackup = self::rutaBackupImg;
+
+        Upload::upload(
+            $foto,
+            $destino,
+            $destinoBackup,
+            array('jpg', 'jpeg'),
+            true, //esImagen 
+            self::rutaImgMarcaDeAgua
+        );
+    }
+
+    public static function pizzaAlta($sabor, $tipo, $precio, $cantidad, $foto = null)
     {
         $retorno = false;
         $lista = Pizza::traerLista(self::rutaArchivoPizzas);
@@ -34,6 +59,11 @@ class Pizzeria
         } else {
             $retorno = $pizza->Guardar(self::rutaArchivoPizzas);
         }
+
+        if ($retorno && $foto) {
+            self::pizzaSubirFoto($sabor, $tipo, $foto);
+        }
+
         return $retorno;
     }
 
@@ -72,15 +102,60 @@ class Pizzeria
                 $retorno = $venta->Guardar(self::rutaArchivoVentas);
 
                 if ($foto) {
-                    Imagenes::upload(self::rutaFotoVentas . 'nombre', $foto)
+                    $destino =
+                        self::rutaImgVentas .
+                        $tipo .
+                        $sabor .
+                        explode('@', $email)[0] .
+                        date("Ymd") .
+                        '.' .
+                        pathinfo($foto['name'], PATHINFO_EXTENSION);
+
+                    Upload::upload(
+                        $foto,
+                        $destino,
+                        array('jpg', 'jpeg'),
+                        true, //esImagen 
+                        self::rutaImgMarcaDeAgua
+                    );
                 }
             } else {
-                mensaje('no hay suficiente stock');
+                mensaje('no hay suficiente stock: ' . $pizza->getCantidad());
             }
         }
         return $retorno;
     }
 
+    public static function pizzaModificar($sabor, $tipo, $precio, $cantidad, $foto = null)
+    {
+        $retorno = false;
+        $lista = Pizza::traerLista(self::rutaArchivoPizzas);
+        $pizza = new Pizza(Pizza::getNextId($lista), $sabor, $tipo, $precio, $cantidad);
+
+        if (Pizza::contiene($lista, $pizza->pkToAssociativeArray())) {
+            $retorno = Pizza::modificarUno(self::rutaArchivoPizzas, $pizza);
+            mensaje('stock y precio actualizado');
+        } else {
+            $retorno = $pizza->Guardar(self::rutaArchivoPizzas);
+        }
+
+        if ($retorno && $foto) {
+            mensaje('foto actualizada');
+            self::pizzaSubirFoto($sabor, $tipo, $foto);
+        }
+
+        return $retorno;
+    }
+
+    public static function pizzaBaja($sabor, $tipo)
+    {
+        $pk = array('sabor' => $sabor, 'tipo' => $tipo);
+        $retorno = Pizza::borrarUno(self::rutaArchivoPizzas, $pk);
+        if (!$retorno) {
+            mensaje('no se encontro');
+        }
+        return $retorno;
+    }
 
     //--------------------------------------------------------------------------------//
 }
