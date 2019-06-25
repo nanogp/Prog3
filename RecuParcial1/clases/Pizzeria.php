@@ -2,6 +2,7 @@
 
 require_once 'clases/Pizza.php';
 require_once 'clases/Venta.php';
+require_once 'clases/Empleado.php';
 require_once 'toolbox/Upload.php';
 
 class Pizzeria
@@ -9,8 +10,10 @@ class Pizzeria
     /* ATRIBUTOS */
     const rutaArchivoPizzas = "./archivos/Pizza.txt";
     const rutaArchivoVentas = "./archivos/Venta.txt";
+    const rutaArchivoEmpleados = "./archivos/empleados.txt";
     const rutaImgVentas = "./ImagenesDeLaVenta/";
     const rutaImgPizzas = "./ImagenesDePizzas/";
+    const rutaImgEmpleados = "./ImagenesDeEmpleados/";
     const rutaBackupImg = "./backUpFotos/";
     const rutaImgMarcaDeAgua = "./archivos/imgMarcaDeAgua.png";
 
@@ -187,5 +190,63 @@ class Pizzeria
         }
     }
 
+    public static function empleadoAlta($email, $alias, $tipo, $edad, $foto = null)
+    {
+        $retorno = false;
+        $listaEmpleados = Empleado::traerLista(self::rutaArchivoEmpleados);
+
+        $empleado = new Empleado(Empleado::getNextId($listaEmpleados), $alias, $tipo, $email, $edad);
+
+        if (Empleado::contiene($listaEmpleados, array('email' => $email))) {
+            mensaje('El empleado ya existe');
+        } else {
+            $retorno = $empleado->Guardar(self::rutaArchivoEmpleados);
+            if ($foto) {
+                $destino =
+                    self::rutaImgEmpleados .
+                    $email . //explode('@', )[0] .
+                    '.' .
+                    pathinfo($foto['name'], PATHINFO_EXTENSION);
+
+                Upload::upload(
+                    $foto,
+                    $destino,
+                    null,
+                    array('jpg', 'jpeg'),
+                    true, //esImagen 
+                    null //self::rutaImgMarcaDeAgua
+                );
+            }
+        }
+        return $retorno;
+    }
+
+    public static function ListarEmpleados($tipo)
+    {
+        $listaEmpleados = Empleado::traerLista(self::rutaArchivoEmpleados);
+
+        switch ($tipo) {
+            case 'conimagenes':
+                foreach ($listaEmpleados as $empleado) {
+                    echo $empleado->toString();
+                    $strHtml = "<img src=" . self::rutaImgEmpleados . $empleado->getEmail() . ".jpg" . " alt=" . " border=3 height=120px width=160px></img></br>";
+                    echo $strHtml;
+                }
+                break;
+            case 'sinimagenes':
+                foreach ($listaEmpleados as $empleado) {
+                    $empleado->mostrar();
+                }
+                break;
+            case 'solonombres':
+                foreach ($listaEmpleados as $empleado) {
+                    mensaje($empleado->getAlias());
+                }
+                break;
+            default:
+                mensaje('el tipo de listado debe estar entre [conimagenes, sinimagenes, solonombres]');
+                break;
+        }
+    }
     //--------------------------------------------------------------------------------//
 }

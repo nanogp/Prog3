@@ -18,10 +18,13 @@
         case 'GET':
             switch (key($_GET)) {
                 case 'pizzacarga':
-                    require_once 'llamadores/PizzaCarga.php ';
+                    require_once 'llamadores/PizzaCarga.php';
                     break;
                 case 'listadoimagenes':
-                    require_once 'llamadores/ListadoDeImagenes.php ';
+                    require_once 'llamadores/ListadoDeImagenes.php';
+                    break;
+                case 'listadoempleados':
+                    require_once 'llamadores/ListadoEmpleados.php';
                     break;
                 default:
                     var_dump($_GET);
@@ -31,17 +34,20 @@
         case 'POST':
             switch (key($_POST)) {
                 case 'pizzacarga':
-                    require_once 'llamadores/PizzaCargaFoto.php ';
+                    require_once 'llamadores/PizzaCargaFoto.php';
                     break;
                 case 'pizzaconsultar':
-                    require_once 'llamadores/PizzaConsultar.php ';
+                    require_once 'llamadores/PizzaConsultar.php';
                     break;
                 case 'altaventa':
-                    require_once 'llamadores/AltaVenta.php ';
+                    require_once 'llamadores/AltaVenta.php';
+                    break;
+                case 'altaempleado':
+                    require_once 'llamadores/AltaEmpleado.php';
                     break;
                 case 'pizzacargaplus':
                     $_PUT = $_POST;
-                    require_once 'llamadores/PizzaCargaPlus.php ';
+                    require_once 'llamadores/PizzaCargaPlus.php';
                     break;
                 default:
                     var_dump($_POST);
@@ -50,7 +56,7 @@
             break;
         case 'PUT':
             $_PUT = Archivos::parsearPhpInput();
-            require_once 'llamadores/PizzaCargaPlus.php ';
+            require_once 'llamadores/PizzaCargaPlus.php';
             break;
         case 'DELETE':
             $_DELETE = Archivos::parsearPhpInput();
