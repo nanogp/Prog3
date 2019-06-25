@@ -7,12 +7,12 @@ require_once 'toolbox/Upload.php';
 class Pizzeria
 {   //--------------------------------------------------------------------------------//
     /* ATRIBUTOS */
-
     const rutaArchivoPizzas = "archivos/Pizza.txt";
     const rutaArchivoVentas = "archivos/Venta.txt";
-    const rutaImgVentas = "archivos/ImagenesDeLaVenta/";
-    const rutaImgPizzas = "archivos/ImagenesDePizzas/";
-    const rutaBackupImg = "/../backUpFotos​/";
+    const rutaImgVentas = "ImagenesDeLaVenta/";
+    const rutaImgPizzas = "ImagenesDePizzas/";
+    const rutaBackupImg = "backUpFotos​/";
+    //const rutaBackupImg = "c:\github\Prog3\RecuParcial1\archivos\backUpFotos​/";
     const rutaImgMarcaDeAgua = "archivos/imgMarcaDeAgua.png";
 
     //--------------------------------------------------------------------------------//
@@ -114,6 +114,7 @@ class Pizzeria
                     Upload::upload(
                         $foto,
                         $destino,
+                        null,
                         array('jpg', 'jpeg'),
                         true, //esImagen 
                         self::rutaImgMarcaDeAgua
@@ -151,10 +152,40 @@ class Pizzeria
     {
         $pk = array('sabor' => $sabor, 'tipo' => $tipo);
         $retorno = Pizza::borrarUno(self::rutaArchivoPizzas, $pk);
-        if (!$retorno) {
+        if ($retorno) {
+            //muevo la foto
+            $rutaOrigen = self::rutaImgPizzas . $tipo . $sabor;
+            $rutaDestino = self::rutaImgPizzas . $tipo . $sabor;
+            Archivos::copiarABackup($rutaOrigen, $rutaDestino);
+        } else {
             mensaje('no se encontro');
         }
         return $retorno;
+    }
+
+    public static function ListarImagenes($tipo)
+    {
+        if ($tipo == "borradas") {
+            foreach (scandir("backUpFotos/") as $file) {
+                if ($file != "." && $file != "..") {
+                    if (file_exists("backUpFotos/$file")) {
+                        $strHtml = "<img src= backUpFotos/" . $file . " alt=" . " border=3 height=120px width=160px></img>";
+                        echo $strHtml;
+                    }
+                }
+            }
+        } elseif ($tipo == "cargadas") {
+            foreach (scandir(self::rutaImgPizzas)  as $file) {
+                if ($file != "." && $file != "..") {
+                    if (file_exists(self::rutaImgPizzas . $file)) {
+                        $strHtml = "<img src=" . self::rutaImgPizzas . $file . " alt=" . " border=3 height=120px width=160px></img>";
+                        echo $strHtml;
+                    }
+                }
+            }
+        } else {
+            mensaje('el tipo debe estar entre [borradas, cargadas]');
+        }
     }
 
     //--------------------------------------------------------------------------------//

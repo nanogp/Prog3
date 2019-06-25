@@ -52,3 +52,5 @@
 {"id":52,"sabor":"muzza","tipo":"piedra","email":"tipojodido@jodido.com","cantidad":"1"}
 {"id":53,"sabor":"muzza","tipo":"piedra","email":"tipojodido@jodido.com","cantidad":"1"}
 {"id":54,"sabor":"muzza","tipo":"piedra","email":"tipojodido@jodido.com","cantidad":"1"}
+{"id":55,"sabor":"muzza","tipo":"piedra","email":"tipojodido@jodido.com","cantidad":"45"}
+{"id":56,"sabor":"muzza","tipo":"piedra","email":"tipojodido@jodido.com","cantidad":"1"}

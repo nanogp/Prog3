@@ -3,5 +3,4 @@
 {"id":3,"sabor":"especial","tipo":"molde","precio":"120","cantidad":"50"}
 {"id":5,"sabor":"especial","tipo":"piedra","precio":"125","cantidad":"29"}
 {"id":6,"sabor":"jamon","tipo":"piedra","precio":"333","cantidad":"20"}
-{"id":7,"sabor":"muzza","tipo":"piedra","precio":"100","cantidad":"50"}
-{"id":8,"sabor":"anana","tipo":"piedra","precio":"250","cantidad":380}
+{"id":7,"sabor":"muzza","tipo":"piedra","precio":"100","cantidad":54}

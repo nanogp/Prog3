@@ -1,9 +1,9 @@
 <?php
 
-if (isset($_POST['sabor']) && isset($_POST['precio']) && isset($_POST['tipo']) && isset($_POST['cantidad'])) {
+if (isset($_PUT['sabor']) && isset($_PUT['precio']) && isset($_PUT['tipo']) && isset($_PUT['cantidad'])) {
 
-    if ($_POST['tipo'] == "molde" || $_POST['tipo'] == "piedra") {
-        if (Pizzeria::pizzaModificar($_POST['sabor'], $_POST['tipo'], $_POST['precio'], $_POST['cantidad'], isset($_FILES['foto']) ? $_FILES['foto'] : null)) {
+    if ($_PUT['tipo'] == "molde" || $_PUT['tipo'] == "piedra") {
+        if (Pizzeria::pizzaModificar($_PUT['sabor'], $_PUT['tipo'], $_PUT['precio'], $_PUT['cantidad'], isset($_FILES['foto']) ? $_FILES['foto'] : null)) {
             mensaje('ok');
         } else {
             mensaje('fallo');

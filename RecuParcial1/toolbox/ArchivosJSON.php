@@ -144,6 +144,7 @@ class ArchivosJSON extends Archivos
 
     public static function borrarUno($rutaArchivo, $constructor, $pk)
     {
+        $retorno = false;
         $archivo = fopen($rutaArchivo, "r");
         $arrayDepurado = array();
         while (!feof($archivo)) {
@@ -152,6 +153,7 @@ class ArchivosJSON extends Archivos
                 $arrayDeDatos = json_decode($linea, true);
                 if (self::compararPk($arrayDeDatos, $pk)) {
                     /* encontre el dato, salteo a la proxima lectura */
+                    $retorno = true;
                     continue;
                 } else {
                     array_push($arrayDepurado, call_user_func($constructor, $arrayDeDatos));
@@ -160,8 +162,11 @@ class ArchivosJSON extends Archivos
         }
         fclose($archivo);
 
-        /* ahora guardo en el archivo el array depurado */
-        self::guardarTodos($rutaArchivo, $arrayDepurado);
+        if ($retorno) {
+            /* si borro, guardo en el archivo el array depurado */
+            self::guardarTodos($rutaArchivo, $arrayDepurado);
+        }
+        return $retorno;
     }
 
 

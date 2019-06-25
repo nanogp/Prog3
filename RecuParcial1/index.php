@@ -20,6 +20,9 @@
                 case 'pizzacarga':
                     require_once 'llamadores/PizzaCarga.php ';
                     break;
+                case 'listadoimagenes':
+                    require_once 'llamadores/ListadoDeImagenes.php ';
+                    break;
                 default:
                     var_dump($_GET);
                     break;
@@ -37,6 +40,7 @@
                     require_once 'llamadores/AltaVenta.php ';
                     break;
                 case 'pizzacargaplus':
+                    $_PUT = $_POST;
                     require_once 'llamadores/PizzaCargaPlus.php ';
                     break;
                 default:
@@ -44,7 +48,12 @@
                     break;
             }
             break;
+        case 'PUT':
+            $_PUT = Archivos::parsearPhpInput();
+            require_once 'llamadores/PizzaCargaPlus.php ';
+            break;
         case 'DELETE':
+            $_DELETE = Archivos::parsearPhpInput();
             require_once 'llamadores/BorrarPizza.php';
             break;
     }
