@@ -1,3 +1,2 @@
 {"id":1,"alias":"manganga","tipo":"jefe","email":"jose@sarasa.com","edad":"33"}
-{"id":2,"alias":"el atm","tipo":"cajero","email":"cuadrado@sarasa.com","edad":"77"}
 {"id":3,"alias":"pirulo","tipo":"pizzero","email":"pirulo@pirulo.com","edad":"72"}

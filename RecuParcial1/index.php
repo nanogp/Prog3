@@ -45,6 +45,9 @@
                 case 'altaempleado':
                     require_once 'llamadores/AltaEmpleado.php';
                     break;
+                case 'altaventaconimagenyempleado':
+                    require_once 'llamadores/AltaVentaConImagenYEmpleado.php';
+                    break;
                 case 'pizzacargaplus':
                     $_PUT = $_POST;
                     require_once 'llamadores/PizzaCargaPlus.php';

@@ -10,19 +10,21 @@ class Venta
     private $id;
     private $tipo;
     private $sabor;
-    private $email;
+    private $emailUsuario;
+    private $emailEmpleado;
     private $cantidad;
     //--------------------------------------------------------------------------------//
 
 
     //--------------------------------------------------------------------------------//
     /* CONSTRUCTOR */
-    function __construct($id, $sabor, $tipo,  $email, $cantidad)
+    function __construct($id, $sabor, $tipo,  $emailUsuario, $emailEmpleado, $cantidad)
     {
         $this->id = $id;
         $this->sabor = $sabor;
         $this->tipo = $tipo;
-        $this->email = $email;
+        $this->emailUsuario = $emailUsuario;
+        $this->emailEmpleado = $emailEmpleado;
         $this->cantidad = $cantidad;
     }
 
@@ -58,14 +60,24 @@ class Venta
         $this->tipo = $tipo;
     }
 
-    public function getemail()
+    public function getemailUsuario()
     {
-        return $this->email;
+        return $this->emailUsuario;
     }
 
-    public function setemail($email)
+    public function setemailUsuario($emailUsuario)
     {
-        $this->email = $email;
+        $this->emailUsuario = $emailUsuario;
+    }
+
+    public function getEmailEmpleado()
+    {
+        return $this->emailEmpleado;
+    }
+
+    public function setEmailEmpleado($emailEmpleado)
+    {
+        $this->emailEmpleado = $emailEmpleado;
     }
 
     public function getCantidad()
@@ -85,7 +97,14 @@ class Venta
     /* METODOS DE CLASE */
     public static function fromAssociativeArray($array)
     {
-        return new self($array['id'], $array['sabor'], $array['tipo'], $array['email'], $array['cantidad']);
+        return new self(
+            $array['id'],
+            $array['sabor'],
+            $array['tipo'],
+            $array['emailUsuario'],
+            $array['emailEmpleado'],
+            $array['cantidad']
+        );
     }
 
     public static function traerLista($rutaArchivo)
@@ -124,7 +143,7 @@ class Venta
     /* METODOS DE INSTANCIA */
     public function toString()
     {
-        return "Id: $this->id | Email: $this->email | Sabor: $this->sabor | Tipo: $this->tipo  | Cantidad: $this->cantidad<br>";
+        return "Id: $this->id | Email Usuario: $this->emailUsuario | Email Empleado: $this->emailEmpleado | Sabor: $this->sabor | Tipo: $this->tipo  | Cantidad: $this->cantidad<br>";
     }
 
     public function mostrar()
@@ -134,12 +153,24 @@ class Venta
 
     public function toAssociativeArray()
     {
-        return array('id' => $this->getId(), 'sabor' => $this->getSabor(), 'tipo' => $this->getTipo(), 'email' => $this->getEmail(), 'cantidad' => $this->getCantidad());
+        return array(
+            'id' => $this->getId(),
+            'sabor' => $this->getSabor(),
+            'tipo' => $this->getTipo(),
+            'emailUsuario' => $this->getemailUsuario(),
+            'emailEmpleado' => $this->getEmailEmpleado(),
+            'cantidad' => $this->getCantidad()
+        );
     }
 
     public function pkToAssociativeArray()
     {
-        return array('sabor' => $this->getSabor(), 'tipo' => $this->getTipo(), 'email' => $this->getEmail());
+        return array(
+            'sabor' => $this->getSabor(),
+            'tipo' => $this->getTipo(),
+            'emailUsuario' => $this->getemailUsuario(),
+            'emailempleado' => $this->getEmailEmpleado()
+        );
     }
 
     public function guardar($rutaArchivo)

@@ -293,5 +293,56 @@ class Pizzeria
         return $retorno;
     }
 
+    public static function ventaAltaConImagenYEmpleado($emailusuario, $emailempleado, $sabor, $tipo, $cantidad, $foto = null)
+    {
+        $retorno = false;
+        $listaPizzas = Pizza::traerLista(self::rutaArchivoPizzas);
+        $listaVentas = Venta::traerLista(self::rutaArchivoVentas);
+        $listaEmpleados = Empleado::traerLista(self::rutaArchivoEmpleados);
+
+        if (ArchivosJSON::contiene($listaEmpleados, array('email' => $emailempleado))) {
+
+            $venta = new Venta(Venta::getNextId($listaVentas), $sabor, $tipo, $emailusuario, $emailempleado, $cantidad);
+
+            if (Pizzeria::pizzaConsultar($sabor, $tipo)) {
+
+                $pizza = Pizza::buscar($listaPizzas, array('sabor' => $sabor, 'tipo' => $tipo));
+                if ($pizza->getCantidad() >= $cantidad) {
+
+                    $pizza->setCantidad($pizza->getCantidad() - $cantidad);
+                    ArchivosJSON::guardarTodos(self::rutaArchivoPizzas, $listaPizzas);
+                    $retorno = $venta->Guardar(self::rutaArchivoVentas);
+
+                    if ($foto) {
+                        $destino =
+                            self::rutaImgVentas .
+                            $tipo .
+                            $sabor .
+                            explode('@', $emailusuario)[0] .
+                            explode('@', $emailempleado)[0] .
+                            date(Archivos::formatoFecha) .
+                            '.' .
+                            pathinfo($foto['name'], PATHINFO_EXTENSION);
+
+                        Upload::upload(
+                            $foto,
+                            $destino,
+                            null,
+                            array('jpg', 'jpeg'),
+                            true, //esImagen 
+                            self::rutaImgMarcaDeAgua
+                        );
+                    }
+                } else {
+                    mensaje('no hay suficiente stock: ' . $pizza->getCantidad());
+                }
+            }
+        } else {
+            mensaje('empleado no existe');
+        }
+        return $retorno;
+    }
+
+
     //--------------------------------------------------------------------------------//
 }
