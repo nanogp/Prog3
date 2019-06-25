@@ -143,12 +143,12 @@ class Venta
     /* METODOS DE INSTANCIA */
     public function toString()
     {
-        return "Id: $this->id | Email Usuario: $this->emailUsuario | Email Empleado: $this->emailEmpleado | Sabor: $this->sabor | Tipo: $this->tipo  | Cantidad: $this->cantidad<br>";
+        return "Id: $this->id | Email Usuario: $this->emailUsuario | Email Empleado: $this->emailEmpleado | Sabor: $this->sabor | Tipo: $this->tipo  | Cantidad: $this->cantidad";
     }
 
     public function mostrar()
     {
-        echo $this->toString();
+        echo $this->toString() . '<br>';
     }
 
     public function toAssociativeArray()

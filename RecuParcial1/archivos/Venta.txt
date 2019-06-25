@@ -1,1 +1,1 @@
-{"id":1,"sabor":"dulce de leche","tipo":"molde","emailUsuario":"comprador@gmail.com","emailEmpleado":"pirulo@pirulo.com","cantidad":"9"}
+{"id":1,"sabor":"dulce_de_leche","tipo":"molde","emailUsuario":"comprador@gmail.com","emailEmpleado":"pirulo@pirulo.com","cantidad":"9"}

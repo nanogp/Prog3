@@ -1,2 +1,2 @@
 {"id":1,"sabor":"muzza","tipo":"molde","precio":"250","cantidad":200}
-{"id":2,"sabor":"dulce de leche","tipo":"molde","precio":"300","cantidad":1}
+{"id":2,"sabor":"dulce_de_leche","tipo":"molde","precio":"300","cantidad":1}

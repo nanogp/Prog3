@@ -26,6 +26,9 @@
                 case 'listadoempleados':
                     require_once 'llamadores/ListadoEmpleados.php';
                     break;
+                case 'listadoempleadosventas':
+                    require_once 'llamadores/ListadoEmpleadosVentas.php';
+                    break;
                 default:
                     var_dump($_GET);
                     break;

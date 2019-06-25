@@ -320,7 +320,6 @@ class Pizzeria
                             $sabor .
                             explode('@', $emailusuario)[0] .
                             explode('@', $emailempleado)[0] .
-                            date(Archivos::formatoFecha) .
                             '.' .
                             pathinfo($foto['name'], PATHINFO_EXTENSION);
 
@@ -343,6 +342,30 @@ class Pizzeria
         return $retorno;
     }
 
+    public static function ListarEmpleadosVentas($emailempleado)
+    {
+        $retorno = false;
+        $listaVentas = Venta::traerLista(self::rutaArchivoVentas);
+        if (ArchivosJSON::contiene($listaVentas, array('emailEmpleado' => $emailempleado))) {
+            foreach ($listaVentas as $venta) {
+                echo $venta->toString();
+
+                $destino =
+                    self::rutaImgVentas .
+                    $venta->getTipo() .
+                    $venta->getSabor() .
+                    explode('@',  $venta->getEmailusuario())[0] .
+                    explode('@', $emailempleado)[0] .
+                    '.jpg';
+
+                $strHtml = "<img src=" . $destino . " alt=" . " border=3 height=120px width=160px></img></br>";
+                echo $strHtml;
+            }
+        } else {
+            mensaje('empleado no existe');
+        }
+        return $retorno;
+    }
 
     //--------------------------------------------------------------------------------//
 }
