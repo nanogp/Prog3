@@ -26,6 +26,7 @@ class ArchivosJSON extends Archivos
 
     public static function contiene($listado, $pk)
     {
+        $hayCoincidencia = false;
         foreach ($listado as $objeto) {
             $hayCoincidencia = self::compararPk($objeto->toAssociativeArray(), $pk);
             if ($hayCoincidencia) {

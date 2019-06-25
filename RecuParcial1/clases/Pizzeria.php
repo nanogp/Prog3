@@ -168,7 +168,7 @@ class Pizzeria
             foreach (scandir("backUpFotos/") as $file) {
                 if ($file != "." && $file != "..") {
                     if (file_exists("backUpFotos/$file")) {
-                        $strHtml = "<img src= backUpFotos/" . $file . " alt=" . " border=3 height=120px width=160px></img>";
+                        $strHtml = "<img src= backUpFotos/" . $file . " alt=" . " border=3 height=120px width=160px></img></br>";
                         echo $strHtml;
                     }
                 }
@@ -177,7 +177,7 @@ class Pizzeria
             foreach (scandir(self::rutaImgPizzas)  as $file) {
                 if ($file != "." && $file != "..") {
                     if (file_exists(self::rutaImgPizzas . $file)) {
-                        $strHtml = "<img src=" . self::rutaImgPizzas . $file . " alt=" . " border=3 height=120px width=160px></img>";
+                        $strHtml = "<img src=" . self::rutaImgPizzas . $file . " alt=" . " border=3 height=120px width=160px></img></br>";
                         echo $strHtml;
                     }
                 }
