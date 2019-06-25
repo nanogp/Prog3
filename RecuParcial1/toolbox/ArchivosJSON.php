@@ -184,16 +184,21 @@ class ArchivosJSON extends Archivos
 
                 if (self::compararPk($arrayDeDatos, $pk)) {
                     /* encontre el dato, lo modifico */
-                    foreach ($reemplazar as $key => $value) {
-                        $arrayDeDatos[$key] = $value;
+                    if ($reemplazar) {
+                        foreach ($reemplazar as $key => $value) {
+                            $arrayDeDatos[$key] = $value;
+                        }
                     }
 
-                    foreach ($acumular as $key => $value) {
-                        $arrayDeDatos[$key] += $value;
+                    if ($acumular) {
+                        foreach ($acumular as $key => $value) {
+                            $arrayDeDatos[$key] += $value;
+                        }
                     }
 
                     $objeto = call_user_func($constructor, $arrayDeDatos);
                     array_push($arrayDepurado, $objeto);
+                    $retorno = true;
                 } else {
                     array_push($arrayDepurado, call_user_func($constructor, $arrayDeDatos));
                 }

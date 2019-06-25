@@ -126,6 +126,14 @@ class Empleado
         );
     }
 
+    public static function borrar($rutaArchivo, $pk)
+    {
+        return ArchivosJSON::borrarUno(
+            $rutaArchivo,
+            self::nombreConstructorJSON,
+            $pk
+        );
+    }
     //--------------------------------------------------------------------------------//
 
 

@@ -251,15 +251,47 @@ class Pizzeria
 
     public static function empleadoModificar($email, $tipo)
     {
-        $retorno = false;
+        $retorno = Empleado::modificarUno(self::rutaArchivoEmpleados, new Empleado(null, null, $tipo, $email, null));
 
-        if (Empleado::contiene($lista, $empleado->pkToAssociativeArray())) {
-            $retorno = Empleado::modificarUno(self::rutaArchivoEmpleados, $empleado);
-            mensaje('tipo actualizado');
+        if ($retorno) {
+            mensaje('empleado actualizado');
         } else {
             mensaje('no se encontro el empleado');
         }
         return $retorno;
     }
+
+
+    public static function empleadoBaja($filtro, $case)
+    {
+        $retorno = false;
+        switch ($case) {
+            case 'email':
+                $pk = array('email' => $filtro);
+                break;
+            case 'tipo':
+                $pk = array('tipo' => $filtro);
+                break;
+        }
+
+        $listaEmpleados = Empleado::traerLista(self::rutaArchivoEmpleados);
+
+        foreach ($listaEmpleados as $key => $empleado) {
+            if (ArchivosJSON::compararPk($empleado->toAssociativeArray(), $pk)) {
+                unset($listaEmpleados[$key]);
+                $rutaOrigen = self::rutaImgEmpleados . $empleado->getEmail() . ".jpg";
+                $rutaDestino = self::rutaBackupImg;
+                $retorno = Imagenes::moverABackup($rutaOrigen, $rutaDestino);
+            }
+        }
+
+        if ($retorno) {
+            ArchivosJSON::guardarTodos(self::rutaArchivoEmpleados, $listaEmpleados);
+        } else {
+            mensaje('no se encontro');
+        }
+        return $retorno;
+    }
+
     //--------------------------------------------------------------------------------//
 }

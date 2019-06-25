@@ -56,11 +56,25 @@
             break;
         case 'PUT':
             $_PUT = Archivos::parsearPhpInput();
-            require_once 'llamadores/PizzaCargaPlus.php';
+            switch (key($_PUT)) {
+                case 'pizzacargaplus':
+                    require_once 'llamadores/PizzaCargaPlus.php';
+                    break;
+                case 'empleadodatos':
+                    require_once 'llamadores/empleadoDatos.php';
+                    break;
+            }
             break;
         case 'DELETE':
             $_DELETE = Archivos::parsearPhpInput();
-            require_once 'llamadores/BorrarPizza.php';
+            switch (key($_DELETE)) {
+                case 'borrarpizza':
+                    require_once 'llamadores/BorrarPizza.php';
+                    break;
+                case 'borrarempleado':
+                    require_once 'llamadores/empleadoBorrar.php';
+                    break;
+            }
             break;
     }
     ?>
