@@ -248,5 +248,18 @@ class Pizzeria
                 break;
         }
     }
+
+    public static function empleadoModificar($email, $tipo)
+    {
+        $retorno = false;
+
+        if (Empleado::contiene($lista, $empleado->pkToAssociativeArray())) {
+            $retorno = Empleado::modificarUno(self::rutaArchivoEmpleados, $empleado);
+            mensaje('tipo actualizado');
+        } else {
+            mensaje('no se encontro el empleado');
+        }
+        return $retorno;
+    }
     //--------------------------------------------------------------------------------//
 }

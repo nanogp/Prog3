@@ -116,6 +116,15 @@ class Empleado
         }
     }
 
+    public static function modificarUno($rutaArchivo, $empleado)
+    {
+        return ArchivosJSON::modificarUno(
+            $rutaArchivo,
+            self::nombreConstructorJSON,
+            $empleado->pkToAssociativeArray(),
+            array('tipo' => $empleado->getTipo())
+        );
+    }
 
     //--------------------------------------------------------------------------------//
 
@@ -139,7 +148,7 @@ class Empleado
 
     public function pkToAssociativeArray()
     {
-        return array('alias' => $this->getAlias(), 'tipo' => $this->getTipo(), 'email' => $this->getEmail());
+        return array('email' => $this->getEmail());
     }
 
     public function guardar($rutaArchivo)

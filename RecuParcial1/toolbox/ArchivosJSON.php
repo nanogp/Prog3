@@ -201,8 +201,10 @@ class ArchivosJSON extends Archivos
         }
         fclose($archivo);
 
-        /* ahora guardo en el archivo el array depurado */
-        $retorno = self::guardarTodos($rutaArchivo, $arrayDepurado);
+        if ($retorno) {
+            //guardo en el archivo actualizado si hubo cambios
+            $retorno = self::guardarTodos($rutaArchivo, $arrayDepurado);
+        }
         return $retorno;
     }
 }
