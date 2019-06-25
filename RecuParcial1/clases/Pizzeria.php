@@ -348,18 +348,19 @@ class Pizzeria
         $listaVentas = Venta::traerLista(self::rutaArchivoVentas);
         if (ArchivosJSON::contiene($listaVentas, array('emailEmpleado' => $emailempleado))) {
             foreach ($listaVentas as $venta) {
-                echo $venta->toString();
+                if ($venta->getEmailEmpleado() == $emailempleado) {
+                    echo $venta->toString();
+                    $destino =
+                        self::rutaImgVentas .
+                        $venta->getTipo() .
+                        $venta->getSabor() .
+                        explode('@', $venta->getEmailusuario())[0] .
+                        explode('@', $emailempleado)[0] .
+                        '.jpg';
 
-                $destino =
-                    self::rutaImgVentas .
-                    $venta->getTipo() .
-                    $venta->getSabor() .
-                    explode('@',  $venta->getEmailusuario())[0] .
-                    explode('@', $emailempleado)[0] .
-                    '.jpg';
-
-                $strHtml = "<img src=" . $destino . " alt=" . " border=3 height=120px width=160px></img></br>";
-                echo $strHtml;
+                    $strHtml = "<img src=" . $destino . " alt=" . " border=3 height=120px width=160px></img></br>";
+                    echo $strHtml;
+                }
             }
         } else {
             mensaje('empleado no existe');

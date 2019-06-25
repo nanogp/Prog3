@@ -1,1 +1,5 @@
 {"id":1,"sabor":"dulce_de_leche","tipo":"molde","emailUsuario":"comprador@gmail.com","emailEmpleado":"pirulo@pirulo.com","cantidad":"9"}
+{"id":2,"sabor":"dulce_de_leche","tipo":"molde","emailUsuario":"otrapersona@hotmail.com","emailEmpleado":"pirulo@pirulo.com","cantidad":"2"}
+{"id":3,"sabor":"muzza","tipo":"molde","emailUsuario":"comprador@sarasa.com","emailEmpleado":"jose@sarasa.com","cantidad":"3"}
+{"id":4,"sabor":"dulce_de_leche","tipo":"molde","emailUsuario":"comprador@sarasa.com","emailEmpleado":"jose@sarasa.com","cantidad":"3"}
+{"id":5,"sabor":"anana","tipo":"piedra","emailUsuario":"comprandoando@sarasa.com","emailEmpleado":"jose@sarasa.com","cantidad":"3"}
