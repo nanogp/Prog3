@@ -7,13 +7,12 @@ require_once 'toolbox/Upload.php';
 class Pizzeria
 {   //--------------------------------------------------------------------------------//
     /* ATRIBUTOS */
-    const rutaArchivoPizzas = "archivos/Pizza.txt";
-    const rutaArchivoVentas = "archivos/Venta.txt";
-    const rutaImgVentas = "ImagenesDeLaVenta/";
-    const rutaImgPizzas = "ImagenesDePizzas/";
-    const rutaBackupImg = "backUpFotos​/";
-    //const rutaBackupImg = "c:\github\Prog3\RecuParcial1\archivos\backUpFotos​/";
-    const rutaImgMarcaDeAgua = "archivos/imgMarcaDeAgua.png";
+    const rutaArchivoPizzas = "./archivos/Pizza.txt";
+    const rutaArchivoVentas = "./archivos/Venta.txt";
+    const rutaImgVentas = "./ImagenesDeLaVenta/";
+    const rutaImgPizzas = "./ImagenesDePizzas/";
+    const rutaBackupImg = "./backUpFotos/";
+    const rutaImgMarcaDeAgua = "./archivos/imgMarcaDeAgua.png";
 
     //--------------------------------------------------------------------------------//
 
@@ -107,7 +106,7 @@ class Pizzeria
                         $tipo .
                         $sabor .
                         explode('@', $email)[0] .
-                        date("Ymd") .
+                        date(Archivos::formatoFecha) .
                         '.' .
                         pathinfo($foto['name'], PATHINFO_EXTENSION);
 
@@ -154,9 +153,9 @@ class Pizzeria
         $retorno = Pizza::borrarUno(self::rutaArchivoPizzas, $pk);
         if ($retorno) {
             //muevo la foto
-            $rutaOrigen = self::rutaImgPizzas . $tipo . $sabor;
-            $rutaDestino = self::rutaImgPizzas . $tipo . $sabor;
-            Archivos::copiarABackup($rutaOrigen, $rutaDestino);
+            $rutaOrigen = self::rutaImgPizzas . $tipo . $sabor . ".jpg";
+            $rutaDestino = self::rutaBackupImg;
+            Archivos::moverABackup($rutaOrigen, $rutaDestino);
         } else {
             mensaje('no se encontro');
         }

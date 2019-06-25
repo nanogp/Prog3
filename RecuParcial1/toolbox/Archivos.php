@@ -1,8 +1,13 @@
 <?php
 
-/**
- * 
- */
+//pathinfo($rutaOrigen, PATHINFO_BASENAME)
+//PATHINFO RETORNA UN ARRAY CON INFORMACION DEL PATH
+//RETORNA : NOMBRE DEL DIRECTORIO; NOMBRE DEL ARCHIVO; EXTENSION DEL ARCHIVO
+//PATHINFO_DIRNAME - retorna solo nombre del directorio
+//PATHINFO_BASENAME - retorna solo el nombre del archivo (con la extension)
+//PATHINFO_EXTENSION - retorna solo extension
+//PATHINFO_FILENAME - retorna solo el nombre del archivo (sin la extension)
+
 class Archivos
 {
     const formatoFecha = "YmdHis";
@@ -24,16 +29,6 @@ class Archivos
         }
 
         return $retorno;
-    }
-
-    public static function moverArchivoBackup($archivoOriginal, $nuevoArchivo, $destino)
-    {
-        $arrayDeDatos = explode('.', $archivoOriginal); //agarramos el archivo original y lo desarmamos
-        $nuevoDestino = "./backUpFotos/" . $nuevoArchivo . date("Y-m-d_h_m_s") . ".$arrayDeDatos[1]"; //hacemos un nuevo destino url con el nuevo nombre de archivo y la extension del original
-        echo "NUEVO DESTINO $nuevoDestino";
-        copy($destino, $nuevoDestino); //movemos ese archivo al nuevo destino
-        $destino = "./archivos/" . $nuevoArchivo . ".$arrayDeDatos[1]";
-        return TRUE;
     }
 
     public static function moverABackup($rutaOrigen, $rutaBackup = null, $concatFecha = true, $formatoFecha = self::formatoFecha)
@@ -69,7 +64,7 @@ class Archivos
 
         $retorno = copy($rutaOrigen, $rutaDestino);
         if ($mover) {
-            unlink($destino);
+            unlink($rutaOrigen);
         }
         return $retorno;
     }

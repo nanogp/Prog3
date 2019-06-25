@@ -19,13 +19,6 @@ class Upload extends Archivos
 	{
 		$retorno = true;
 
-		//PATHINFO RETORNA UN ARRAY CON INFORMACION DEL PATH
-		//RETORNA : NOMBRE DEL DIRECTORIO; NOMBRE DEL ARCHIVO; EXTENSION DEL ARCHIVO
-		//PATHINFO_DIRNAME - retorna solo nombre del directorio
-		//PATHINFO_BASENAME - retorna solo el nombre del archivo (con la extension)
-		//PATHINFO_EXTENSION - retorna solo extension
-		//PATHINFO_FILENAME - retorna solo el nombre del archivo (sin la extension)
-
 		//echo var_dump( pathinfo($destino));die();
 
 		if ($extensiones) {
