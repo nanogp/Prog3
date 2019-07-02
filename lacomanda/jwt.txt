@@ -1,0 +1,12 @@
+1- ALTA {jwt}
+2- CONSULTA {admin => todo, user => filtrado}
+3- MW
+4- MOD {admin => todo, user => lo propio}
+5- BAJA {admin => todo, user => lo propio}
+------------------------------------------------
+1- REGISTRO -> ALTA
+2- LOGIN -> Buscar + jwt
+3- Traer Todos los usuarios {solo si jwt == ok}
+4- Traer datos segun perfil
+5- 
+6- 
