@@ -1,0 +1,8 @@
+#Crear el proyecto
+composer create-project slim/slim-skeleton parcial_02
+
+#Agrega librerias para conectarte a las bases de datos
+composer require illuminate/database
+
+#Agrega las librerias para leer el token
+composer require firebase/php-jwt
