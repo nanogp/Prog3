@@ -6,3 +6,6 @@ composer require illuminate/database
 
 #Agrega las librerias para leer el token
 composer require firebase/php-jwt
+
+#Cuando cambio de compu, bajo de nuevo composer y le doy en consola
+composer.phar update

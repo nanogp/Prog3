@@ -1,24 +1,56 @@
 <?php
 
 use Slim\App;
-use Slim\Http\Request;
-use Slim\Http\Response;
-use App\Models\ORM\compra;
-use App\Models\ORM\compraControler;
+use App\Models\ORM\UsuarioController;
+use App\Models\ORM\CompraController;
+use App\Models\API\MWparaAutentificar;
+use App\Models\API\MWparaLogs;
+use App\Models\API\MWparaUsuarios;
+use App\Models\API\MWparaCompras;
 
-include_once __DIR__ . '/app/compra.php';
-include_once __DIR__ . '/app/compraControler.php';
+include_once __DIR__ . '/app/models/ORM/Usuario.php';
+include_once __DIR__ . '/app/models/ORM/UsuarioController.php';
+include_once __DIR__ . '/app/models/ORM/Compra.php';
+include_once __DIR__ . '/app/models/ORM/CompraController.php';
+include_once __DIR__ . '/app/models/API/MWparaAutentificar.php';
+include_once __DIR__ . '/app/models/API/MWparaLogs.php';
+include_once __DIR__ . '/app/models/API/MWparaUsuarios.php';
+include_once __DIR__ . '/app/models/API/MWparaCompras.php';
 
 return function (App $app) {
     $container = $app->getContainer();
-
-  /*   $app->get('/[{name}]', function (Request $request, Response $response, array $args) use ($container) {
+    /*   $app->get('/[{name}]', function (Request $request, Response $response, array $args) use ($container) {
         // Sample log message
         $container->get('logger')->info("Slim-Skeleton '/' route");
 
-        // Render index view
+        // Render index views
         return $container->get('renderer')->render($response, 'index.phtml', $args);
     }); */
 
-    $app->get('/prueba', compraControler::class . ':traerTodos');
+    $app->get('/prueba', function () {
+        echo "probando";
+    });
+
+    $app->group('/login', function () {
+        $this->post('/', UsuarioController::class . ':Login');
+    });
+
+    $app->group('/usuario', function () {
+
+        $this->get('/', UsuarioController::class . ':TraerTodos')->add(MWparaUsuarios::class . ':FiltrarUsuarios');
+        $this->get('/TraerUno', UsuarioController::class . ':TraerUno');
+        $this->post('/', UsuarioController::class . ':CargarUno');
+        $this->put('/', UsuarioController::class . ':ModificarUno');
+        $this->delete('/', UsuarioController::class . ':BorrarUno');
+    })->add(MWparaLogs::class . ':GuardarLog')->add(MWparaAutentificar::class . ':ValidarUsuario');
+
+
+    $app->group('/compra', function () {
+
+        $this->get('/', CompraController::class . ':TraerTodos')->add(MWparaCompras::class . ':FiltrarCompras');
+        $this->get('/TraerUno', CompraController::class . ':TraerUno');
+        $this->post('/', CompraController::class . ':CargarUno');
+        $this->put('/', CompraController::class . ':ModificarUno');
+        $this->delete('/', CompraController::class . ':BorrarUno');
+    })->add(MWparaLogs::class . ':GuardarLog')->add(MWparaAutentificar::class . ':ValidarUsuario');
 };
