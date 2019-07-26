@@ -142,7 +142,7 @@ class CompraController implements IApiController
         foreach ($todos as $compra) {
             $strHtml .= "<tr>";
             foreach (self::getPropertiesTabla() as $key) {
-                $strHtml .= "<td>$compra[$key]</td>";
+                $strHtml .= "<td height=120>$compra[$key]</td>";
             }
             $rutaOrigen =  self::rutaImgCompras . "$compra->id$compra->articulo.png";
             if (file_exists($rutaOrigen)) {
