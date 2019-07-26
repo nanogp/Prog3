@@ -61,8 +61,11 @@ class Archivos
         /* $rutaOrigen = str_replace("/", DIRECTORY_SEPARATOR, $rutaOrigen);
         $rutaDestino = str_replace("/", DIRECTORY_SEPARATOR, $rutaDestino); */
 
-        mensaje("RUTA ORIGEN $rutaOrigen <br>");
-        mensaje("RUTA DESTINO $rutaDestino <br>");
+        salto();
+        var_dump("RUTA ORIGEN $rutaOrigen");
+        salto();
+        var_dump("RUTA DESTINO $rutaDestino");
+        salto();
 
         $retorno = copy($rutaOrigen, $rutaDestino);
         if ($mover) {

@@ -35,7 +35,9 @@ class Upload extends Archivos
 				}
 				$mensaje = rtrim($mensaje, ',');
 				$mensaje .= ']';
+				salto();
 				var_dump($mensaje);
+				salto();
 			}
 		}
 
@@ -44,7 +46,9 @@ class Upload extends Archivos
 			if (!getimagesize($file["tmp_name"])) {
 				$retorno = false;
 
+				salto();
 				var_dump('se esperaba un archivo de imagen');
+				salto();
 			}
 		}
 
@@ -52,7 +56,9 @@ class Upload extends Archivos
 		if ($file["size"] > 5000000) {
 			$retorno = false;
 
+			salto();
 			var_dump("El archivo es demasiado grande. Verifique!!!");
+			salto();
 		}
 
 		//verifico si hubo algun error, chequeando $retorno
@@ -69,9 +75,13 @@ class Upload extends Archivos
 					Imagenes::marcaDeAgua($destino, $imgMarcaDeAgua);
 				}
 
-				var_dump("<br/>El archivo " . basename($file["name"]) . " ha sido subido exitosamente.");
+				salto();
+				var_dump("El archivo " . basename($file["name"]) . " ha sido subido exitosamente.");
+				salto();
 			} else {
-				var_dump("<br/>Lamentablemente ocurri&oacute; un error y no se pudo subir el archivo.");
+				salto();
+				var_dump("Lamentablemente ocurri&oacute; un error y no se pudo subir el archivo.");
+				salto();
 				$retorno = false;
 			}
 		}

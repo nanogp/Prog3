@@ -2,7 +2,7 @@
 
 namespace App\Models\ORM;
 
-use App\Models\ORM\log;
+use App\Models\ORM\Log;
 use App\Models\API\IApiController;
 
 require_once __DIR__ . '/log.php';
@@ -43,12 +43,58 @@ class LogController implements IApiController
         );
     }
 
-    //---------------------------------------------- metodos
+    public static function getPropertiesMetodo()
+    {
+        return array(
+            'metodo'
+        );
+    }
+
+    public static function getPropertiesTabla()
+    {
+        return array(
+            'id',
+            'usuario',
+            'metodo',
+            'ruta',
+            'fechahora'
+        );
+    }
+
+    //---------------------------------------------- medatos
     public function TraerTodos($request, $response, $args)
     {
-        $todos = Log::all();
-        $retorno = $response->withJson($todos, 200);
+        $datos = Log::all();
+        $retorno = $response->withJson($datos, 200);
         return $retorno;
+    }
+
+    public function TraerPorMetodo($request, $response, $args)
+    {
+        $respuesta = 'no hay datos para ese metodo';
+        $parametros = array(self::getPropertiesMetodo()[0] => $request->getQueryParam(self::getPropertiesMetodo()[0]));
+        $datos = buscarPorBaseTodos(Log::class, $parametros);
+        if (!$datos->isEmpty()) {
+            $strHtml = "<table border='1' style='border-collapse: collapse'>";
+            foreach ($datos as $dato) {
+                foreach (self::getPropertiesTabla() as $key) {
+                    $strHtml .= "<th>" . strtoupper($key) . "</th>";
+                }
+                break;
+            }
+
+            $strHtml .= "<tbody>";
+            foreach ($datos as $dato) {
+                $strHtml .= "<tr>";
+                foreach (self::getPropertiesTabla() as $key) {
+                    $strHtml .= "<td>$dato[$key]</td>";
+                }
+                $strHtml .= "</tr>";
+            }
+            $strHtml .= "</tbody>";
+            $respuesta = $strHtml;
+        }
+        return $respuesta;
     }
 
     public function TraerUno($request, $response, $args)

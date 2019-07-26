@@ -50,6 +50,16 @@ function buscar($listado, $pk)
     return $hayCoincidencia;
 }
 
+function buscarPorBase($contructor, $array)
+{
+    return (new $contructor())->where($array)->first();
+}
+
+function buscarPorBaseTodos($contructor, $array)
+{
+    return (new $contructor())->where($array)->get();
+}
+
 function createArray($request, $pk)
 {
     foreach ($pk as $key) {
@@ -64,6 +74,15 @@ function createProperties($objeto, $request, $array)
         $objeto->{$key} = $request[$key];
     }
     return $objeto;
+}
+
+function removeNullProperties($objeto)
+{
+    foreach ($objeto as $key => $value) {
+        if ($value = null) {
+            unset($objeto->{$key});
+        }
+    }
 }
 
 function createProperty($objeto, $name, $value)

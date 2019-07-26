@@ -3,6 +3,7 @@
 namespace App\Models\ORM;
 
 use App\Models\ORM\Compra;
+use App\Models\ORM\Usuario;
 use App\Models\API\IApiController;
 use App\Models\API\AutentificadorJWT;
 
@@ -14,13 +15,13 @@ include_once __DIR__ . '/../../common.php';
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use MWparaAutentificar;
-
+use phpDocumentor\Reflection\Types\String_;
 
 class CompraController implements IApiController
 {
-    const rutaImgCompras = __DIR__ . "/../../IMGCompras/";
-    const rutaBackupImg = __DIR__ . "/../../IMGCompras/backup/";
-    const rutaImgMarcaDeAgua = __DIR__ . "/../../IMGCompras/imgMarcaDeAgua.png";
+    const rutaImgCompras = __DIR__ . "/../../../../public/IMGCompras/";
+    const rutaBackupImg = __DIR__ . "/../../../../public/IMGCompras/backup/";
+    const rutaImgMarcaDeAgua = __DIR__ . "/../../../../public/IMGCompras/imgMarcaDeAgua.png";
 
     //---------------------------------------------- devuelven arrays de datos obligatorios para cada request
     public static function getPropertiesFull()
@@ -70,6 +71,17 @@ class CompraController implements IApiController
         );
     }
 
+    public static function getPropertiesTabla()
+    {
+        return array(
+            'id',
+            'id_usuario',
+            'articulo',
+            'fecha',
+            'precio'
+        );
+    }
+
     //---------------------------------------------- metodos
     public function TraerTodos($request, $response, $args)
     {
@@ -78,11 +90,81 @@ class CompraController implements IApiController
         return $retorno;
     }
 
+    public function TraerPorUsuario($request, $response, $args)
+    {
+        $respuesta = 'no existe el usuario';
+        $parametros['nombre'] = $request->getQueryParam('nombre');
+        $usuario = buscarPorBase(Usuario::class, $parametros);
+
+        if ($usuario) {
+            $respuesta = 'no hay datos para ese usuario';
+            $datos = buscarPorBaseTodos(Compra::class, array('id_usuario' => $usuario->id));
+
+            if (!$datos->isEmpty()) {
+                $strHtml = "<table border='1' style='border-collapse: collapse'>";
+                foreach ($datos as $dato) {
+                    foreach (self::getPropertiesTabla() as $key) {
+                        $strHtml .= "<th>" . strtoupper($key) . "</th>";
+                    }
+                    break;
+                }
+
+                $strHtml .= "<tbody>";
+                foreach ($datos as $dato) {
+                    $strHtml .= "<tr>";
+                    foreach (self::getPropertiesTabla() as $key) {
+                        $strHtml .= "<td>$dato[$key]</td>";
+                    }
+                    $strHtml .= "</tr>";
+                }
+                $strHtml .= "</tbody>";
+                $respuesta = $strHtml;
+            }
+        }
+        return $respuesta;
+    }
+
+
+    public function TraerTodosConFoto($request, $response, $args)
+    {
+        $todos = Compra::all();
+
+        $strHtml = "<table border='1' style='border-collapse: collapse'>";
+        foreach ($todos as $compra) {
+            foreach (self::getPropertiesTabla() as $key) {
+                $strHtml .= "<th>" . strtoupper($key) . "</th>";
+            }
+            $strHtml .= "<th>FOTO</th>";
+            break;
+        }
+
+        $strHtml .= "<tbody>";
+        foreach ($todos as $compra) {
+            $strHtml .= "<tr>";
+            foreach (self::getPropertiesTabla() as $key) {
+                $strHtml .= "<td>$compra[$key]</td>";
+            }
+            $rutaOrigen =  self::rutaImgCompras . "$compra->id$compra->articulo.png";
+            if (file_exists($rutaOrigen)) {
+                $rutaMostrar = $request->getUri()->getBasePath() . "/IMGCompras/"  . "$compra->id$compra->articulo.png";
+                $strHtml .= "<td><img src=$rutaMostrar height=120 width=120></img></td>";
+            } else {
+                $strHtml .= "<td>SIN FOTO</td>";
+            }
+            $strHtml .= "</tr>";
+        }
+        $strHtml .= "</tbody>";
+
+        // $retorno = $response->with($strHtml, 200);
+        return $strHtml;
+    }
+
     public function TraerUno($request, $response, $args)
     {
         $respuesta = 'datos no existentes';
         $pk = createArray($_GET, self::getPkCompra());
-        $dato = buscar(Compra::all(), $pk);
+        // $dato = buscar(Compra::all(), $pk);
+        $dato = buscarPorBase(Compra::class, $pk);
         if ($dato) $respuesta = $dato;
         $retorno = $response->withJson($respuesta, 200);
         return $retorno;
@@ -90,20 +172,15 @@ class CompraController implements IApiController
 
     public function CargarUno($request, $response, $args)
     {
-
         $parametros = $request->getParsedBody();
         $parametros['id_usuario'] = $request->getAttribute('payload')->id;
-        $parametros['id_usuario'] = AutentificadorJWT::ObtenerData($request->getHeader('token')[0])->id;
+        //$parametros['id_usuario'] = AutentificadorJWT::ObtenerData($request->getHeader('token')[0])->id;
         $dato = createProperties(new Compra(), $parametros, self::getPropertiesRequired());
         $dato->save();
 
         $retorno = $response->withJson("id $dato->id cargado", 200);
 
-        if ($retorno) {
-            if (isset($_FILES['foto'])) {
-                self::subirFoto($dato->id, $dato->articulo, $_FILES['foto']);
-            }
-        }
+        if ($retorno && isset($_FILES['foto'])) self::subirFoto($dato->id, $dato->articulo, $_FILES['foto']);
 
         return $retorno;
     }
@@ -118,7 +195,13 @@ class CompraController implements IApiController
         if ($dato) {
             $dato->delete();
             $textoResponse = "id $dato->id borrado";
+            $rutaOrigen = self::rutaImgCompras . "$dato->id$dato->articulo.png";
+            if (file_exists($rutaOrigen)) {
+                $rutaDestino = self::rutaBackupImg;
+                Archivos::moverABackup($rutaOrigen, $rutaDestino);
+            }
         }
+
         $retorno = $response->withJson($textoResponse, 200);
         return $retorno;
     }

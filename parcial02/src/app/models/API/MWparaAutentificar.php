@@ -26,15 +26,10 @@ class MWparaAutentificar
 
                 $response = $next($request, $response); //llamar proximo MW
 
-                if ($request->isPut() || $request->isDelete()) {
-                    if ($payload->perfil != 'admin') {
-                        $objDelaRespuesta->respuesta = 'debe ser admin';
-                    }
-                }
             } else {
                 $objDelaRespuesta->respuesta = 'Solo usuarios registrados';
             }
-        } catch (Exception $e) {
+        } catch (RuntimeException $e) {
             $objDelaRespuesta->respuesta = $e->getMessage();
         }
 

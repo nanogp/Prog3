@@ -33,7 +33,7 @@ class UsuarioController implements IApiController
     public static function getPk()
     {
         return array(
-            'id'
+            'nombre'
         );
     }
 
@@ -51,7 +51,6 @@ class UsuarioController implements IApiController
         return array(
             'nombre',
             'clave',
-            'perfil',
             'sexo'
         );
     }
@@ -64,11 +63,21 @@ class UsuarioController implements IApiController
         );
     }
 
+    public static function getPropertiesTabla()
+    {
+        return array(
+            'id',
+            'nombre',
+            'clave',
+            'perfil',
+            'sexo'
+        );
+    }
     //---------------------------------------------- metodos
     public function Login($request, $response, $args)
     {
         $respuesta = 'datos no existentes';
-        $pk = createArray($_POST, self::getPkLogin());
+        $pk = createArray($request->getParsedBody(), self::getPkLogin());
         $todos = Usuario::all();
         $estado = 'APROBAR_NOMBRE';
         $nombreOk[] = null;
@@ -122,8 +131,9 @@ class UsuarioController implements IApiController
     public function TraerUno($request, $response, $args)
     {
         $respuesta = 'datos no existentes';
-        $pk = createArray($request->getQueryParam('id'), self::getPk());
-        $dato = buscar(Usuario::all(), $pk);
+        $pk = createArray($request->getQueryParam('nombre'), self::getPk());
+        // $dato = buscar(Usuario::all(), $pk);
+        $dato = buscarPorBase(Usuario::class, $pk);
         if ($dato) $respuesta = $dato;
         $retorno = $response->withJson($respuesta, 200);
         return $retorno;
@@ -138,7 +148,8 @@ class UsuarioController implements IApiController
 
     public function CargarUno($request, $response, $args)
     {
-        $dato = createProperties(new usuario(), $_POST, self::getPropertiesRequired());
+        $dato = createProperties(new usuario(), $request->getParsedBody(), self::getPropertiesRequired());
+        if ($dato->perfil == null) $dato->perfil = 'usuario';
         $dato->save();
         $retorno = $response->withJson("id $dato->id cargado", 200);
         return $retorno;
@@ -161,18 +172,31 @@ class UsuarioController implements IApiController
 
     public function ModificarUno($request, $response, $args)
     {
-        $textoResponse = 'no se encontro el id';
+        $textoResponse = 'datos no validos';
         parse_str(file_get_contents("php://input"), $_PUT);
-        $pk = createArray($_PUT, self::getPk());
+        $parametros[self::getPk()[0]] = $request->getAttribute('payload')->{self::getPk()[0]};
+        $dato = buscarPorBase(Usuario::class, $parametros);
 
-        $dato = buscar(Usuario::all(), $pk);
         if ($dato) {
             foreach (self::getPropertiesMod() as $key) {
                 $dato[$key] = $_PUT[$key];
             }
             $dato->save();
-            $textoResponse = "se actualizo el id: $dato->id";
+            $textoResponse = "se actualizo el usuario: " . $dato->{self::getPk()[0]};
         }
+
+        // $textoResponse = 'no se encontro el usuario';
+        // parse_str(file_get_contents("php://input"), $_PUT);
+        // $pk = createArray($_PUT, self::getPk());
+
+        // $dato = buscar(Usuario::all(), $pk);
+        // if ($dato) {
+        //     foreach (self::getPropertiesMod() as $key) {
+        //         $dato[$key] = $_PUT[$key];
+        //     }
+        //     $dato->save();
+        //     $textoResponse = "se actualizo el usuario: $dato->id";
+        // }
         $retorno = $response->withJson($textoResponse, 200);
         return $retorno;
     }

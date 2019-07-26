@@ -7,6 +7,7 @@ use App\Models\API\MWparaAutentificar;
 use App\Models\API\MWparaLogs;
 use App\Models\API\MWparaUsuarios;
 use App\Models\API\MWparaCompras;
+use App\Models\ORM\LogController;
 
 include_once __DIR__ . '/app/models/ORM/Usuario.php';
 include_once __DIR__ . '/app/models/ORM/UsuarioController.php';
@@ -18,6 +19,7 @@ include_once __DIR__ . '/app/models/API/MWparaUsuarios.php';
 include_once __DIR__ . '/app/models/API/MWparaCompras.php';
 
 return function (App $app) {
+
     $container = $app->getContainer();
     /*   $app->get('/[{name}]', function (Request $request, Response $response, array $args) use ($container) {
         // Sample log message
@@ -46,11 +48,22 @@ return function (App $app) {
 
 
     $app->group('/compra', function () {
-
         $this->get('/', CompraController::class . ':TraerTodos')->add(MWparaCompras::class . ':FiltrarCompras');
         $this->get('/TraerUno', CompraController::class . ':TraerUno');
         $this->post('/', CompraController::class . ':CargarUno');
         $this->put('/', CompraController::class . ':ModificarUno');
-        $this->delete('/', CompraController::class . ':BorrarUno');
+        $this->delete('/', CompraController::class . ':BorrarUno')->add(MWparaUsuarios::class . ':SoloAdmin');
     })->add(MWparaLogs::class . ':GuardarLog')->add(MWparaAutentificar::class . ':ValidarUsuario');
+
+    $app->group('/comprasconfoto', function () {
+        $this->get('/', CompraController::class . ':TraerTodosConFoto');
+    });
+
+    $app->group('/comprasporusuario', function () {
+        $this->get('/', CompraController::class . ':TraerPorUsuario');
+    });
+
+    $app->group('/log', function () {
+        $this->get('/', LogController::class . ':TraerPorMetodo');
+    });
 };
