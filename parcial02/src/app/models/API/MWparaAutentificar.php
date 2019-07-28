@@ -29,7 +29,7 @@ class MWparaAutentificar
             } else {
                 $objDelaRespuesta->respuesta = 'Solo usuarios registrados';
             }
-        } catch (RuntimeException $e) {
+        } catch (Exception $e) {
             $objDelaRespuesta->respuesta = $e->getMessage();
         }
 
@@ -40,5 +40,15 @@ class MWparaAutentificar
         }
 
         return $newResponse;
+    }
+
+    public static function encryptarClave($clave)
+    {
+        return  password_hash($clave, PASSWORD_BCRYPT);
+    }
+
+    public function verificarClave($claveIngresada, $claveEncryptada)
+    {
+        return password_verify($claveIngresada, $claveEncryptada);
     }
 }

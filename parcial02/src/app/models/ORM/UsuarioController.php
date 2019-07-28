@@ -5,10 +5,11 @@ namespace App\Models\ORM;
 use App\Models\ORM\Usuario;
 use App\Models\API\IApiController;
 use App\Models\API\AutentificadorJWT;
+use App\Models\API\MWparaAutentificar;
 
 include_once __DIR__ . '/Usuario.php';
 include_once __DIR__ . '/../API/IApiController.php';
-include_once __DIR__ . '/../API/AutentificadorJWT.php';
+include_once __DIR__ . '/../API/MWparaAutentificar.php';
 include_once __DIR__ . '/../../common.php';
 
 use Psr\Http\Message\ResponseInterface as Response;
@@ -16,6 +17,8 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 
 class UsuarioController implements IApiController
 {
+    const ENCRIPTAR_CLAVES = false;
+
     //---------------------------------------------- devuelven arrays de datos obligatorios para cada request
     public static function getPropertiesFull()
     {
@@ -98,7 +101,7 @@ class UsuarioController implements IApiController
         }
 
         foreach ($sexoOk as $usuario) {
-            if ($usuario['clave'] == $pk['clave']) {
+            if ($usuario['clave'] == $pk['clave'] || MWparaAutentificar::verificarClave($pk['clave'], $usuario['clave'])) {
                 $estado = 'OK';
                 $dato = $usuario;
                 break;
@@ -131,9 +134,9 @@ class UsuarioController implements IApiController
     public function TraerUno($request, $response, $args)
     {
         $respuesta = 'datos no existentes';
-        $pk = createArray($request->getQueryParam('nombre'), self::getPk());
+        $parametros['nombre'] = $request->getQueryParam('nombre');
+        $dato = buscarPorBase(Usuario::class, $parametros);
         // $dato = buscar(Usuario::all(), $pk);
-        $dato = buscarPorBase(Usuario::class, $pk);
         if ($dato) $respuesta = $dato;
         $retorno = $response->withJson($respuesta, 200);
         return $retorno;
@@ -150,6 +153,7 @@ class UsuarioController implements IApiController
     {
         $dato = createProperties(new usuario(), $request->getParsedBody(), self::getPropertiesRequired());
         if ($dato->perfil == null) $dato->perfil = 'usuario';
+        if (self::ENCRIPTAR_CLAVES) $dato->clave = MWparaAutentificar::encryptarClave($dato->clave);
         $dato->save();
         $retorno = $response->withJson("id $dato->id cargado", 200);
         return $retorno;
@@ -164,7 +168,7 @@ class UsuarioController implements IApiController
         $dato = buscar(Usuario::all(), $pk);
         if ($dato) {
             $dato->delete();
-            $textoResponse = "id $dato->id borrado";
+            $textoResponse = "id $dato->id: $dato->nombre, borrado";
         }
         $retorno = $response->withJson($textoResponse, 200);
         return $retorno;

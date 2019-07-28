@@ -162,8 +162,9 @@ class CompraController implements IApiController
     public function TraerUno($request, $response, $args)
     {
         $respuesta = 'datos no existentes';
-        $pk = createArray($_GET, self::getPkCompra());
+        // $pk = createArray($_GET, self::getPkCompra());
         // $dato = buscar(Compra::all(), $pk);
+        $pk = createArray($request->getQueryParam(self::getPk()[0]), self::getPk());
         $dato = buscarPorBase(Compra::class, $pk);
         if ($dato) $respuesta = $dato;
         $retorno = $response->withJson($respuesta, 200);

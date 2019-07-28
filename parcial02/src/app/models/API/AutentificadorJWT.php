@@ -31,7 +31,7 @@ class AutentificadorJWT
     public static function VerificarToken($token)
     {
         if (empty($token)) {
-            throw new RuntimeException("El token esta vacio.");
+            throw new Exception("El token esta vacio.");
         }
         // las siguientes lineas lanzan una excepcion, de no ser correcto o de haberse terminado el tiempo       
 
@@ -41,13 +41,13 @@ class AutentificadorJWT
                 self::$claveSecreta,
                 self::$tipoEncriptacion
             );
-        } catch (RuntimeException $e) {
+        } catch (Exception $e) {
             throw $e;
         }
 
         // si no da error,  verifico los datos de AUD que uso para saber de que lugar viene  
         if ($decodificado->aud !== self::Aud()) {
-            throw new RuntimeException("No es el usuario valido");
+            throw new Exception("No es el usuario valido");
         }
     }
 
