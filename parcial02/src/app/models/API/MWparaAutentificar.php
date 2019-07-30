@@ -4,6 +4,7 @@ namespace App\Models\API;
 
 use Slim\App;
 use App\Models\API\AutentificadorJWT;
+use Exception;
 
 include_once __DIR__ . '/AutentificadorJWT.php';
 

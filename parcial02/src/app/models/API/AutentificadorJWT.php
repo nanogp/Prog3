@@ -3,6 +3,7 @@
 namespace App\Models\API;
 
 use Firebase\JWT\JWT;
+use Exception;
 
 class AutentificadorJWT
 {
