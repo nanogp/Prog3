@@ -65,9 +65,8 @@ class CompraController implements IApiController
     public static function getPropertiesMod()
     {
         return array(
-            'id_usuario',
             'articulo',
-            'fecha'
+            'precio'
         );
     }
 
@@ -144,9 +143,9 @@ class CompraController implements IApiController
             foreach (self::getPropertiesTabla() as $key) {
                 $strHtml .= "<td height=120>$compra[$key]</td>";
             }
-            $rutaOrigen =  self::rutaImgCompras . "$compra->id$compra->articulo.png";
+            $rutaOrigen =  self::rutaImgCompras . $compra->id .  $compra->articulo . ".png";
             if (file_exists($rutaOrigen)) {
-                $rutaMostrar = $request->getUri()->getBasePath() . "/IMGCompras/"  . "$compra->id$compra->articulo.png";
+                $rutaMostrar = $request->getUri()->getBasePath() . "/IMGCompras/"  . $compra->id .  $compra->articulo . ".png";
                 $strHtml .= "<td><img src=$rutaMostrar height=120 width=120></img></td>";
             } else {
                 $strHtml .= "<td>SIN FOTO</td>";
@@ -192,19 +191,26 @@ class CompraController implements IApiController
         parse_str(file_get_contents("php://input"), $_DELETE);
         $pk = createArray($_DELETE, self::getPk());
 
-        $dato = buscar(Compra::all(), $pk);
-        if ($dato) {
-            $dato->delete();
-            $textoResponse = "id $dato->id borrado";
-            $rutaOrigen = self::rutaImgCompras . "$dato->id$dato->articulo.png";
-            if (file_exists($rutaOrigen)) {
-                $rutaDestino = self::rutaBackupImg;
-                Archivos::moverABackup($rutaOrigen, $rutaDestino);
+        $compras = buscar(Compra::all(), $pk);
+        if ($compras) {
+            foreach ($compras as $compra) {
+                $compra->delete();
+                $rutaOrigen = self::rutaImgCompras . $compra->id . $compra->articulo . ".png";
+                if (file_exists($rutaOrigen)) {
+                    $rutaDestino = self::rutaBackupImg;
+                    Archivos::moverABackup($rutaOrigen, $rutaDestino);
+                }
             }
         }
 
         $retorno = $response->withJson($textoResponse, 200);
         return $retorno;
+    }
+
+    public function BorrarPorUsuario($id_usuario)
+    {
+        $pk['id_usuario'] = $id_usuario;
+        Compra::where($pk)->delete();
     }
 
     public function ModificarUno($request, $response, $args)
@@ -213,7 +219,7 @@ class CompraController implements IApiController
         parse_str(file_get_contents("php://input"), $_PUT);
         $pk = createArray($_PUT, self::getPk());
 
-        $dato = buscar(Compra::all(), $pk);
+        $dato = buscarPorBase(Compra::class, $pk);
         if ($dato) {
             foreach (self::getPropertiesMod() as $key) {
                 $dato[$key] = $_PUT[$key];

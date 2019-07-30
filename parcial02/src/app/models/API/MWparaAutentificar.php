@@ -17,7 +17,8 @@ class MWparaAutentificar
         $objDelaRespuesta->ok = false;
 
         try {
-            $token = $request->getHeader('token')[0];
+            $token = null;
+            if ($request->getHeader('token') != null) $token = $request->getHeader('token')[0];
             AutentificadorJWT::verificarToken($token);
             $objDelaRespuesta->ok = true;
 

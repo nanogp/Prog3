@@ -3,6 +3,7 @@
 namespace App\Models\ORM;
 
 use App\Models\ORM\Usuario;
+use App\Models\ORM\CompraController;
 use App\Models\API\IApiController;
 use App\Models\API\AutentificadorJWT;
 use App\Models\API\MWparaAutentificar;
@@ -10,6 +11,7 @@ use App\Models\API\MWparaAutentificar;
 include_once __DIR__ . '/Usuario.php';
 include_once __DIR__ . '/../API/IApiController.php';
 include_once __DIR__ . '/../API/MWparaAutentificar.php';
+include_once __DIR__ . '/../ORM/CompraController.php';
 include_once __DIR__ . '/../../common.php';
 
 use Psr\Http\Message\ResponseInterface as Response;
@@ -167,6 +169,7 @@ class UsuarioController implements IApiController
 
         $dato = buscar(Usuario::all(), $pk);
         if ($dato) {
+            CompraController::BorrarPorUsuario($dato->id);
             $dato->delete();
             $textoResponse = "id $dato->id: $dato->nombre, borrado";
         }

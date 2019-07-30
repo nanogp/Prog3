@@ -286,6 +286,13 @@ ALTER TABLE `usuarios`
 --
   ALTER TABLE `usuarios` ADD CONSTRAINT chk_perfil CHECK (`perfil` IN ('admin','usuario'));
   ALTER TABLE `usuarios` ADD CONSTRAINT chk_sexo CHECK (`sexo` IN ('masculino','femenino'));
+
+--
+-- Constraints de la tabla `compras`
+--
+  ALTER TABLE `compras` ADD CONSTRAINT chk_pago CHECK (`tipo_de_pago` IN ('efectivo','tarjeta', 'mercadopago'));
+
+
 --
 -- AUTO_INCREMENT de las tablas volcadas
 --
